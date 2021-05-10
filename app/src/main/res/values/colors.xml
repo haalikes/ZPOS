@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#00cba9</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="transRed">#54FF0000</color>
+    <color name="transRedSuper">#28FF0000</color>
+    <color name="transRedDarker">#A3FF0000</color>
+    <color name="blackText">#290606</color>
+    <color name="MainMenu">#2E2B2B</color>
+    <color name="transFull">#00FFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="payment">#FFF5B4</color>
+</resources>

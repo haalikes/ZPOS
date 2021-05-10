@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_wave"
+    tools:context="com.watata.zpos.StocksActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="26sp"
+                android:text="M > Stocks History"
+                android:fontFamily="@font/wendy_one"
+                android:textColor="#FFFFFF"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/inventory_new"/>
+
+        </RelativeLayout>
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="1"
+            android:rowCount="6"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false"
+            android:paddingLeft="1dp"
+            android:paddingRight="1dp"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="1dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right"
+                        android:padding="1dp"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Input data to add:"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="1dp"
+                        android:orientation="horizontal"
+                        android:gravity="left"
+                        >
+                        <Spinner
+                            android:id="@+id/in_out"
+                            android:autofillHints="In or Out"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:padding="10dp"
+                            />
+                        <Spinner
+                            android:id="@+id/stock_name"
+                            android:autofillHints="Product Name"
+                            android:layout_width="160dp"
+                            android:layout_height="40dp"
+                            />
+                        <EditText
+                            android:id="@+id/eQty"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/custom_text"
+                            android:inputType="number"
+                            android:gravity="center"
+                            android:hint="Qty"
+                            />
+                        <Spinner
+                            android:id="@+id/createdby"
+                            android:layout_width="80dp"
+                            android:layout_height="40dp"
+                            />
+                        <EditText
+                            android:id="@+id/eCost"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/custom_text"
+                            android:inputType="number"
+                            android:gravity="center"
+                            android:hint="Cost"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:padding="1dp"
+                        android:gravity="right"
+                        >
+
+                        <Button
+                            android:id="@+id/add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add"
+                            />
+
+                        <Button
+                            android:id="@+id/view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Remaining"/>
+
+                        <Button
+                            android:id="@+id/back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Back"/>
+
+                    </LinearLayout>
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TableLayout
+                            android:id="@+id/tblHistoryDtls"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ProgressBar
+                                android:layout_gravity="center"
+                                android:id="@+id/progressBar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                        </TableLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </GridLayout>
+
+    </LinearLayout>>
+
+</ScrollView>

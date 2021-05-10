@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/ic_wave"
+    tools:context="com.watata.zpos.PaidActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Payment"
+                android:fontFamily="@font/wendy_one"
+                android:textSize="28sp"
+                android:textColor="#FFFFFF"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/z_200_200_trans"/>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardElevation="6dp"
+                                app:cardCornerRadius="12dp"
+                                android:layout_margin="12dp">
+
+                                <LinearLayout
+                                    android:id="@+id/llcash"
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="right"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Cash Details"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="26dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+
+                                    <TableLayout
+                                        android:id="@+id/tblcash"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        >
+
+                                        <ProgressBar
+                                            android:layout_gravity="center"
+                                            android:id="@+id/pbcash"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent" />
+
+                                        <View
+                                            android:id="@+id/vcash"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="2dp"
+                                            android:background="?android:attr/listDivider" />
+
+                                    </TableLayout>
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                        </GridLayout>
+                    </ScrollView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardElevation="6dp"
+                                app:cardCornerRadius="12dp"
+                                android:layout_margin="12dp">
+
+                                <LinearLayout
+                                    android:id="@+id/llpaid"
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="right"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Receipt Details"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="26dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+
+                                    <TableLayout
+                                        android:id="@+id/tblpaid"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        >
+
+                                        <ProgressBar
+                                            android:layout_gravity="center"
+                                            android:id="@+id/pbpaid"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent" />
+
+                                        <View
+                                            android:id="@+id/vpaid"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="2dp"
+                                            android:background="?android:attr/listDivider" />
+
+                                    </TableLayout>
+
+                                    <Button
+                                        android:id="@+id/close"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Close"
+                                        />
+
+                                    <Button
+                                        android:id="@+id/print"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Print"
+                                        />
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                        </GridLayout>
+                    </ScrollView>
+
+                </LinearLayout>
+
+
+
+
+
+            </LinearLayout>
+
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">ZPOS</string>
+    <string name="dash">-</string>
+    <string-array name="unit_for_composite">
+        <item>pcs</item>
+        <item>g</item>
+        <item>ml</item>
+        <item>m</item>
+        <item>part</item>
+        <item>pack</item>
+    </string-array>
+</resources>

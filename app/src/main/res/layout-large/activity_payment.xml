@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/ic_wave"
+    tools:context="com.watata.zpos.PaymentActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:id="@+id/header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Payment"
+                android:fontFamily="@font/wendy_one"
+                android:textSize="35sp"
+                android:textColor="#FFFFFF"/>
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@drawable/z_200_200_trans"/>
+
+        </RelativeLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <GridLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardElevation="6dp"
+                                app:cardCornerRadius="12dp"
+                                android:layout_margin="12dp">
+
+                                <LinearLayout
+                                    android:id="@+id/lldetails"
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="right"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Summary"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="26dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+
+                                    <TableLayout
+                                        android:id="@+id/tblsummary"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        >
+
+                                        <ProgressBar
+                                            android:layout_gravity="center"
+                                            android:id="@+id/pbsummary"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent" />
+
+                                        <View
+                                            android:id="@+id/vsummary"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="2dp"
+                                            android:background="?android:attr/listDivider" />
+
+                                    </TableLayout>
+
+
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Order Details"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="26dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <TableLayout
+                                        android:id="@+id/tbldetails"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        >
+
+                                        <ProgressBar
+                                            android:layout_gravity="center"
+                                            android:id="@+id/pbdetails"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent" />
+
+                                        <View
+                                            android:id="@+id/vdetails"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="2dp"
+                                            android:background="?android:attr/listDivider" />
+
+                                    </TableLayout>
+
+
+
+
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                        </GridLayout>
+                    </ScrollView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <GridLayout
+                            android:id="@+id/gpayment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:columnCount="1"
+                            android:rowCount="50"
+                            android:alignmentMode="alignMargins"
+                            android:columnOrderPreserved="false"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardElevation="6dp"
+                                app:cardCornerRadius="12dp"
+                                android:layout_margin="12dp">
+
+                                <LinearLayout
+                                    android:id="@+id/llpayment"
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="right"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Confirm Payment"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="26dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Total Customer Bill:"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="16dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <TableLayout
+                                        android:id="@+id/tblpayment"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        >
+
+                                        <View
+                                            android:id="@+id/vpayment"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="2dp"
+                                            android:background="?android:attr/listDivider" />
+
+                                    </TableLayout>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="36dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Amount paid:"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="16dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <EditText
+                                        android:id="@+id/amountpaid"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="number"
+                                        android:textSize="16dp"
+                                        android:hint="0.00"
+                                        android:background="@color/payment"
+                                        android:textAlignment="textEnd" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/wendy_one"
+                                        android:textSize="36dp"
+                                        android:textColor="@color/colorPrimary"/>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        >
+
+                                        <Button
+                                            android:id="@+id/add1000"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+1000"
+                                            />
+                                        <Button
+                                            android:id="@+id/add500"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+500"
+                                            />
+                                        <Button
+                                            android:id="@+id/add100"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+100"
+                                            />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        >
+
+                                        <Button
+                                            android:id="@+id/add50"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+50"
+                                            />
+                                        <Button
+                                            android:id="@+id/add20"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+20"
+                                            />
+                                        <Button
+                                            android:id="@+id/add10"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+10"
+                                            />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        >
+
+                                        <Button
+                                            android:id="@+id/add5"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+5"
+                                            />
+                                        <Button
+                                            android:id="@+id/add1"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="+1"
+                                            />
+                                        <Button
+                                            android:id="@+id/addminus"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="-"
+                                            />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="horizontal"
+                                        >
+
+                                        <Button
+                                            android:id="@+id/exactamount"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Exact Amount"
+                                            />
+                                        <Button
+                                            android:id="@+id/clear"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="clear"
+                                            />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="30dp"/>
+
+                                    <Button
+                                        android:id="@+id/done"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:text="Done"
+                                        />
+
+
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardCornerRadius="15dp"
+                                android:layout_margin="12dp"
+                                app:cardBackgroundColor="@color/transFull"
+                                >
+
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="center"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:id="@+id/llmenu"
+                                    android:clickable="true"
+                                    android:background="@drawable/custom_bg_firstload"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:src="@drawable/menu"
+                                        android:background="@drawable/custom_bg"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:textColor="@color/MainMenu"
+                                        android:textSize="18sp"
+                                        android:text="Cash"
+                                        android:paddingRight="2dp"
+                                        android:paddingLeft="2dp"
+                                        />
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardCornerRadius="15dp"
+                                android:layout_margin="12dp"
+                                app:cardBackgroundColor="@color/transFull"
+                                >
+
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="center"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:clickable="true"
+                                    android:background="@drawable/custom_bg_firstload"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:src="@drawable/menu"
+                                        android:background="@drawable/custom_bg"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:textColor="@color/MainMenu"
+                                        android:textSize="18sp"
+                                        android:text="Food Panda(bank)"
+                                        android:paddingRight="2dp"
+                                        android:paddingLeft="2dp"
+                                        />
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_columnWeight="1"
+                                android:layout_rowWeight="1"
+                                app:cardCornerRadius="15dp"
+                                android:layout_margin="12dp"
+                                app:cardBackgroundColor="@color/transFull"
+                                >
+
+                                <LinearLayout
+                                    android:orientation="vertical"
+                                    android:padding="16dp"
+                                    android:gravity="center"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:clickable="true"
+                                    android:background="@drawable/custom_bg_firstload"
+                                    >
+
+                                    <ImageView
+                                        android:layout_width="80dp"
+                                        android:layout_height="80dp"
+                                        android:src="@drawable/menu"
+                                        android:background="@drawable/custom_bg"
+                                        />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="12dp"
+                                        android:textColor="@color/MainMenu"
+                                        android:textSize="18sp"
+                                        android:text="Food Panda(driver)"
+                                        android:paddingRight="2dp"
+                                        android:paddingLeft="2dp"
+                                        />
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+
+                        </GridLayout>
+                    </ScrollView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+
+</LinearLayout>
