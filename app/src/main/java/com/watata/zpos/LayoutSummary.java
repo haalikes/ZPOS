@@ -46,6 +46,7 @@ public class LayoutSummary {
     private boolean in_payment;
     private boolean display_dine_in_out;
     private int total_bill;
+    private final int weightSum = 13;
 
 
     HelperDatabase helperDatabase;
@@ -127,7 +128,7 @@ public class LayoutSummary {
 
         //Dine In / Take Out
         TableRow dineRow = new TableRow(context);
-        dineRow.setWeightSum(13);
+        dineRow.setWeightSum(weightSum);
 
 
         if(!in_payment) dineRow.addView(createTextViewTable(""), param1);
@@ -138,7 +139,7 @@ public class LayoutSummary {
 
         // Header
         TableRow tableRowHdr = new TableRow(context);
-        tableRowHdr.setWeightSum(13);
+        tableRowHdr.setWeightSum(weightSum);
         tableSales.addView(tableRowHdr);
 
             //CREATE
@@ -152,7 +153,7 @@ public class LayoutSummary {
 
         for (int row = listHelperSales.size() - 1; row >= 0 ; row--){
             TableRow tableRow = new TableRow(context);
-            tableRow.setWeightSum(13);
+            tableRow.setWeightSum(weightSum);
             tableSales.addView(tableRow);
 
             TextView tvItemName, tvQty, tvPrice;
@@ -284,7 +285,7 @@ public class LayoutSummary {
 
         //Dine In / Take Out
         TableRow dineRow = new TableRow(context);
-        dineRow.setWeightSum(13);
+        dineRow.setWeightSum(weightSum);
 
 
         if(!in_payment) dineRow.addView(createTextViewTable(""), param1);
@@ -295,7 +296,7 @@ public class LayoutSummary {
 
         // Header
         TableRow tableRowHdr = new TableRow(context);
-        tableRowHdr.setWeightSum(13);
+        tableRowHdr.setWeightSum(weightSum);
         tableSales.addView(tableRowHdr);
 
         //CREATE
@@ -308,7 +309,7 @@ public class LayoutSummary {
 
         for (int row = listHelperSales.size() - 1; row >= 0 ; row--){
             TableRow tableRow = new TableRow(context);
-            tableRow.setWeightSum(13);
+            tableRow.setWeightSum(weightSum);
             tableSales.addView(tableRow);
 
             TextView tvItemName, tvQty, tvPrice;
@@ -434,7 +435,7 @@ public class LayoutSummary {
         TextView textView = new TextView(context);
         textView.setText(sText);
         //textView.setLines(1);
-        textView.setPadding(30, 10, 30, 10);
+        textView.setPadding(10, 10, 30, 10);
         if (right){
             textView.setGravity(Gravity.RIGHT);
         }
@@ -456,11 +457,8 @@ public class LayoutSummary {
             }
         }
 
-        if (screen_size == "phone") {
-            textView.setTextSize(12);
-        } else {
-            textView.setTextSize(18);
-        }
+        textView.setTextSize(textSize());
+
         return(textView);
     }
 
@@ -469,13 +467,7 @@ public class LayoutSummary {
         textView.setText(sText);
         textView.setPadding(30, 10, 30, 10);
         textView.setBackgroundResource(R.drawable.custom_text_in_white);
-
-
-        if (screen_size == "phone") {
-            textView.setTextSize(12);
-        } else {
-            textView.setTextSize(18);
-        }
+        textView.setTextSize(textSize());
         return(textView);
     }
 
@@ -604,6 +596,14 @@ public class LayoutSummary {
         helperSale.setTransaction_id(helperDatabase.maxTransactionId());
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("sales").push();
         reference.setValue(helperSale);
+    }
+
+    public int textSize(){
+        if (screen_size == "phone") {
+            return 12;
+        } else {
+            return 16;
+        }
     }
 
     private void popMessage(String s){

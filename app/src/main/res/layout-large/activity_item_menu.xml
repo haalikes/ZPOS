@@ -43,16 +43,17 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
             <ScrollView
-                android:layout_width="800dp"
+                android:layout_width="700dp"
                 android:layout_height="wrap_content">
 
 
                 <GridLayout
                     android:id="@+id/grid"
-                    android:layout_width="800dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alignmentMode="alignMargins"
                     android:columnCount="4"
@@ -64,10 +65,9 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
                         android:layout_margin="12dp"
                         app:cardCornerRadius="12dp"
-                        android:layout_columnWeight="1"
-                        android:padding="100dp"
                         app:cardElevation="6dp">
 
                         <ImageView

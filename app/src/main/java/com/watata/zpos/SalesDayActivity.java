@@ -61,6 +61,5 @@ public class SalesDayActivity extends AppCompatActivity {
         barChart.setTouchEnabled(true);
 
 
-
     }
 }

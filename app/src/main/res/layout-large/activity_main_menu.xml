@@ -55,20 +55,21 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp"
-
+                app:cardCornerRadius="6dp"
+                android:layout_margin="15dp"
+                app:cardBackgroundColor="@color/transFull"
                 >
 
-
                 <LinearLayout
-                    android:id="@+id/llmenu"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/llmenu"
+                    android:clickable="true"
+                    android:background="@drawable/custom_bg_firstload"
+                    >
 
                     <ImageView
                         android:layout_width="80dp"
@@ -97,7 +98,6 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
                 app:cardCornerRadius="15dp"
                 android:layout_margin="12dp"
                 app:cardBackgroundColor="@color/transFull"
@@ -115,6 +115,7 @@
                     >
 
                     <ImageView
+                        android:id="@+id/ivStocks"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:src="@drawable/inventory_new"
@@ -126,7 +127,7 @@
                         android:layout_marginTop="12dp"
                         android:textColor="@color/MainMenu"
                         android:textSize="18sp"
-                        android:text="Input Inventory"
+                        android:text="Inventory"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp"
                         />
@@ -139,7 +140,6 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
                 app:cardCornerRadius="15dp"
                 android:layout_margin="12dp">
 
@@ -160,12 +160,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:text="Calendar"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -176,7 +175,6 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
                 app:cardCornerRadius="15dp"
                 android:layout_margin="12dp">
 
@@ -196,12 +194,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:text="N/A"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -220,24 +217,29 @@
                     android:padding="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/llsummary"
+                    android:clickable="true"
+                    android:background="@drawable/custom_bg_firstload"
+                    >
 
                     <ImageView
                         android:id="@+id/summary"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/summary"/>
+                        android:src="@drawable/summary"
+                        android:background="@drawable/custom_bg"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
-                        android:text="Summary"
+                        android:text="Sales"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -257,23 +259,29 @@
                     android:padding="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/llSalesNStocks"
+                    android:clickable="true"
+                    android:background="@drawable/custom_bg_firstload"
+                    >
 
                     <ImageView
+                        android:id="@+id/salesNStocks"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/z_200_200_trans"/>
+                        android:src="@drawable/summary"
+                        android:background="@drawable/custom_bg"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
-                        android:text="N/A"
+                        android:text="SalesNStocks"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -285,21 +293,25 @@
                 android:layout_rowWeight="1"
                 app:cardElevation="6dp"
                 app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/transFull"
+                >
 
                 <LinearLayout
-                    android:id="@+id/llsetting"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/llsetting"
+                    android:clickable="true"
+                    android:background="@drawable/custom_bg_firstload"
+                    >
 
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:src="@drawable/settings"
-                        android:background="@drawable/custom_bg"
                         />
 
                     <TextView
@@ -310,8 +322,7 @@
                         android:textSize="18sp"
                         android:text="Setting"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -346,8 +357,7 @@
                         android:textSize="18sp"
                         android:text="Not available"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -425,8 +435,7 @@
                         android:textSize="18sp"
                         android:text="Cash Register"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -460,8 +469,7 @@
                         android:textSize="18sp"
                         android:text="Not Available"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -496,8 +504,7 @@
                         android:textSize="18sp"
                         android:text="Not Available"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"
-                        />
+                        android:paddingLeft="2dp"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

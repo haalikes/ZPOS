@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="35dp"
-                android:text="M \u003c C \u003c I \u003c Variants"
+                android:text="M \u003c C \u003c I \u003c Variants test"
                 android:fontFamily="@font/wendy_one"
                 android:textSize="32sp"
                 android:textColor="#FFFFFF"/>
@@ -42,16 +42,16 @@
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
             <ScrollView
-                android:layout_width="800dp"
+                android:layout_width="700dp"
                 android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/llvariantsdetails"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
@@ -72,7 +72,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:alignmentMode="alignMargins"
-                            android:columnCount="8"
+                            android:columnCount="6"
                             android:columnOrderPreserved="false"
                             android:paddingBottom="20dp"
                             android:paddingLeft="20dp"
@@ -375,6 +375,7 @@
                 </LinearLayout>
 
             </ScrollView>
+
 
 
             <ScrollView

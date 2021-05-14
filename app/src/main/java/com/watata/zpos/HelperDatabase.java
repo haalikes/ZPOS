@@ -2316,20 +2316,20 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                Log.d("updateDuplicateVariants1", "first loop");
-                Log.d("updateDuplicateVariantscursor0", cursor.getString(0));
-                Log.d("updateDuplicateVariantscursor1", cursor.getString(1));
+                ///Log.d("updateDuplicateVariants1", "first loop");
+               /// Log.d("updateDuplicateVariantscursor0", cursor.getString(0));
+               /// Log.d("updateDuplicateVariantscursor1", cursor.getString(1));
 
                 gconcat_prev = gconcat;
                 entry_prev = entry;
                 gconcat = cursor.getString(1);
                 entry = cursor.getString(0);
 
-                Log.d("updateDuplicateVariantsgconcat_prev", "" + gconcat_prev);
-                Log.d("updateDuplicateVariantsentry_prev", "" + entry_prev);
-                Log.d("updateDuplicateVariantsgconcat", "" + gconcat);
-                Log.d("updateDuplicateVariantsentry", "" + entry);
-                Log.d("updateDuplicateVariantsall_entry", "" + all_entry);
+                ///Log.d("updateDuplicateVariantsgconcat_prev", "" + gconcat_prev);
+                ///Log.d("updateDuplicateVariantsentry_prev", "" + entry_prev);
+                ///Log.d("updateDuplicateVariantsgconcat", "" + gconcat);
+                ///Log.d("updateDuplicateVariantsentry", "" + entry);
+                ///Log.d("updateDuplicateVariantsall_entry", "" + all_entry);
 
                 if(!gconcat.equals(gconcat_prev)){
                     if(dup_found){
@@ -2348,7 +2348,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 }
 
                 if(cursor.isLast()){
-                    Log.d("updateDuplicateVariantslast", "last record");
+                    ///Log.d("updateDuplicateVariantslast", "last record");
                     if(dup_found){
                         mergeDupVariants(db, helperSale, gconcat_prev.substring(0,gconcat_prev.indexOf("-")), all_entry, all_entry.substring(0,all_entry.indexOf(",")));
                     }
@@ -2398,23 +2398,23 @@ public class HelperDatabase extends SQLiteOpenHelper {
         item_id_dup = null;
         base_per_entry = null;
 
-        Log.d("updateDuplicateVariants1", query_item_only);
+        ///Log.d("updateDuplicateVariants1", query_item_only);
         if (cursor_item_only_all.moveToFirst()) {
             do {
-                Log.d("updateDuplicateVariants1", "first loop except");
-                Log.d("updateDuplicateVariantsexcept0", cursor_item_only_all.getString(0));
-                Log.d("updateDuplicateVariantsexcept1", cursor_item_only_all.getString(1));
+                ///Log.d("updateDuplicateVariants1", "first loop except");
+                ///Log.d("updateDuplicateVariantsexcept0", cursor_item_only_all.getString(0));
+                ///Log.d("updateDuplicateVariantsexcept1", cursor_item_only_all.getString(1));
 
                 gconcat_prev = gconcat;
                 entry_prev = entry;
                 gconcat = cursor_item_only_all.getString(1);
                 entry = cursor_item_only_all.getString(0);
 
-                Log.d("updateDuplicateVariantsgconcat_prev", "" + gconcat_prev);
-                Log.d("updateDuplicateVariantsentry_prev", "" + entry_prev);
-                Log.d("updateDuplicateVariantsgconcat", "" + gconcat);
-                Log.d("updateDuplicateVariantsentry", "" + entry);
-                Log.d("updateDuplicateVariantsall_entry", "" + all_entry);
+                ///Log.d("updateDuplicateVariantsgconcat_prev", "" + gconcat_prev);
+                ///Log.d("updateDuplicateVariantsentry_prev", "" + entry_prev);
+                ///Log.d("updateDuplicateVariantsgconcat", "" + gconcat);
+                ///Log.d("updateDuplicateVariantsentry", "" + entry);
+                ///Log.d("updateDuplicateVariantsall_entry", "" + all_entry);
 
                 if(!gconcat.equals(gconcat_prev)){
                     if(dup_found){
@@ -2454,7 +2454,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " AND " + col_created_by + " = '" + helperSale.getCreated_by() + "'"
                 + " AND " + col_machine_name + " = '" + helperSale.getMachine_name() + "'"
                 + " AND " + col_completed + " = 'N'";
-        Log.d("updateDuplicateVariantsUpdate", query_update_item);
+        ///Log.d("updateDuplicateVariantsUpdate", query_update_item);
         db.execSQL(query_update_item);
     }
 
@@ -3762,7 +3762,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + " CASE "
                                 + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
                                 + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
-                                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                                + " END  " + " >= " + " (SELECT DATETIME('now', '-91 day'))"
                 + " GROUP BY " + col_date
                 + " ORDER BY 2 "
                 ;
@@ -3794,6 +3794,323 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         return helperSales;
     }
+
+    public List<HelperSales> listStocksPricePerDay(){
+        //set to helpersales so that we can merge this with salesperday later
+        List<HelperSales> helperSales = new LinkedList<>();
+        helperSales.clear();
+
+        String query = "SELECT sum("
+                                + " (CASE "
+                                        + " WHEN " + col_in_out + "='IN' THEN -" + col_cost
+                                        + " ELSE " + col_cost
+                                    + " END) "
+                                + ") AS " + col_cost
+                + ", (" + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " FROM " + tbl_stocks_history
+                + " WHERE " + col_username + " = 'admin'"
+                + " AND " + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                + " GROUP BY " + col_time
+                + " ORDER BY 2 "
+                ;
+
+        Log.d("listStocksPricePerDay", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        HelperSales helperSale = null;
+        int row_num = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+                helperSale = new HelperSales();
+                helperSale.setSelling_price(cursor.getString(0));
+                helperSale.setItem_name(cursor.getString(1));
+                helperSale.setQty("" + row_num);
+                helperSales.add(helperSale);
+                row_num += 1;
+
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+        return helperSales;
+    }
+
+    public int sumCostStocksPerDay(String s_day){
+
+        int s_return = 0;
+
+        String query = "SELECT sum("
+                + " (CASE "
+                + " WHEN " + col_in_out + "='IN' THEN -" + col_cost
+                + " ELSE " + col_cost
+                + " END) "
+                + ") AS " + col_cost
+                + ", (" + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " FROM " + tbl_stocks_history
+                + " WHERE " + col_username + " = 'admin'"
+                + " AND " + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  " + " = " + "'" + s_day + "'"
+                + " GROUP BY " + col_time
+                + " ORDER BY 2 "
+                ;
+
+        Log.d("listStocksPricePerDay", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
+
+
+    public List<HelperSales> listSalesVsStocksPerDay(){
+        //set to helpersales so that we can merge this with salesperday later
+        List<HelperSales> helperSales = new LinkedList<>();
+        helperSales.clear();
+
+        String query_sales = "SELECT sum(" + col_selling_price + ") AS " + col_selling_price
+                + ", (" + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  "
+                + ")" + col_date
+                + " FROM " + tbl_sales
+                + " WHERE " + col_created_by + " = 'admin'"
+                + " AND " + col_machine_name + " = 'pos1'"
+                + " AND " + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                + " GROUP BY " + col_date
+                //+ " ORDER BY 2 "
+                ;
+
+        String query_stocks = "SELECT sum("
+                + " (CASE "
+                + " WHEN " + col_in_out + "='IN' THEN -" + col_cost
+                + " ELSE " + col_cost
+                + " END) "
+                + ") AS " + col_cost
+                + ", (" + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " FROM " + tbl_stocks_history
+                + " WHERE " + col_username + " = 'admin'"
+                + " AND " + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                + " GROUP BY " + col_time
+                //+ " ORDER BY 2 "
+                ;
+
+        String query = "SELECT SUM( " + col_selling_price + ") AS " + col_selling_price
+                        + ", " + col_date
+                        + " FROM "
+                        + " ( " + query_sales + " union all " + query_stocks + " ) "
+                        + " GROUP BY " + col_date
+                        + " ORDER BY 2 "
+                        ;
+
+
+        Log.d("listStocksPricePerDay", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        HelperSales helperSale = null;
+        int row_num = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+                helperSale = new HelperSales();
+                helperSale.setSelling_price(cursor.getString(0));
+                helperSale.setItem_name(cursor.getString(1));
+                helperSale.setQty("" + row_num);
+                helperSales.add(helperSale);
+                row_num += 1;
+
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+        return helperSales;
+    }
+
+
+
 
 
     public int mmMonth(String mon){

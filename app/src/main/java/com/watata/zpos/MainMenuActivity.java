@@ -30,7 +30,7 @@ import java.util.Calendar;
 public class MainMenuActivity extends AppCompatActivity {
 
     String username, all_date;
-    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate;
+    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView mainMenuText;
 
@@ -50,6 +50,7 @@ public class MainMenuActivity extends AppCompatActivity {
         llstocks = findViewById(R.id.llstocks);
         llmenu = findViewById(R.id.llmenu);
         llsummary = findViewById(R.id.llsummary);
+        llsalesnstocks = findViewById(R.id.llSalesNStocks);
         llsetting = findViewById(R.id.llsetting);
         lldate = findViewById(R.id.lldate);
         mainMenuText = findViewById(R.id.mainmenutext);
@@ -75,6 +76,13 @@ public class MainMenuActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 openSalesDayActivity();
+            }
+        });
+
+        llsalesnstocks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openSalesNStocksActivity();
             }
         });
 
@@ -205,6 +213,12 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void openSalesDayActivity(){
         Intent intent = new Intent(this, SalesDayActivity.class);
+        //intent.putExtra("username", username.getText().toString());
+        startActivity(intent);
+    }
+
+    public void openSalesNStocksActivity(){
+        Intent intent = new Intent(this, SalesAndStocksActivity.class);
         //intent.putExtra("username", username.getText().toString());
         startActivity(intent);
     }

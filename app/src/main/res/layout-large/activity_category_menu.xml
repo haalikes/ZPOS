@@ -46,13 +46,13 @@
             android:layout_height="match_parent">
 
             <ScrollView
-                android:layout_width="800dp"
+                android:layout_width="700dp"
                 android:layout_height="wrap_content">
 
 
                 <GridLayout
                     android:id="@+id/catgrid"
-                    android:layout_width="800dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:alignmentMode="alignMargins"
                     android:columnCount="4"

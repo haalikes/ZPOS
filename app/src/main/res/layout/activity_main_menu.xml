@@ -237,7 +237,7 @@
                         android:layout_marginTop="12dp"
                         android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
-                        android:text="Summary"
+                        android:text="Sales"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp"/>
 
@@ -259,20 +259,27 @@
                     android:padding="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/llSalesNStocks"
+                    android:clickable="true"
+                    android:background="@drawable/custom_bg_firstload"
+                    >
 
                     <ImageView
+                        android:id="@+id/salesNStocks"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/z_200_200_trans"/>
+                        android:src="@drawable/summary"
+                        android:background="@drawable/custom_bg"
+                        />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
-                        android:text="N/A"
+                        android:text="SalesNStocks"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp"/>
 
