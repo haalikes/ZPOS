@@ -3802,7 +3802,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         String query = "SELECT sum("
                                 + " (CASE "
-                                        + " WHEN " + col_in_out + "='IN' THEN -" + col_cost
+                                        + " WHEN " + col_in_out + "='Out' THEN -" + col_cost
                                         + " ELSE " + col_cost
                                     + " END) "
                                 + ") AS " + col_cost
@@ -3828,7 +3828,8 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " END  "
                 + ")"
                 + " FROM " + tbl_stocks_history
-                + " WHERE " + col_username + " = 'admin'"
+                + " WHERE 1=1"
+                ///+ " AND " + col_username + " = 'admin'"
                 + " AND " + col_cost + " IS NOT NULL "
                 + " AND " + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
@@ -3855,6 +3856,32 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
                 + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
                 + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                // date
+                + " AND " + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-91 day'))"
                 + " GROUP BY " + col_time
                 + " ORDER BY 2 "
                 ;
@@ -3889,7 +3916,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         String query = "SELECT sum("
                 + " (CASE "
-                + " WHEN " + col_in_out + "='IN' THEN -" + col_cost
+                + " WHEN " + col_in_out + "='Out' THEN -" + col_cost
                 + " ELSE " + col_cost
                 + " END) "
                 + ") AS " + col_cost
@@ -3915,8 +3942,33 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " END  "
                 + ")"
                 + " FROM " + tbl_stocks_history
-                + " WHERE " + col_username + " = 'admin'"
+                + " WHERE 1=1"
+                ///+ " AND " + "+ col_username + " = 'admin'"
                 + " AND " + col_cost + " IS NOT NULL "
+                + " AND " + " (" + " CASE "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " = "
+                + "'" + s_day + "'"
+                // date
                 + " AND " + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
                 + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
@@ -3941,7 +3993,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
                 + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
-                + " END  " + " = " + "'" + s_day + "'"
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-91 day'))"
                 + " GROUP BY " + col_time
                 + " ORDER BY 2 "
                 ;
@@ -4022,7 +4074,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         String query_stocks = "SELECT sum("
                 + " (CASE "
-                + " WHEN " + col_in_out + "='IN' THEN -" + col_cost
+                + " WHEN " + col_in_out + "='Out' THEN -" + col_cost
                 + " ELSE " + col_cost
                 + " END) "
                 + ") AS " + col_cost
