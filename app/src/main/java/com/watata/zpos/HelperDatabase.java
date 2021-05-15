@@ -3829,6 +3829,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + ")"
                 + " FROM " + tbl_stocks_history
                 + " WHERE " + col_username + " = 'admin'"
+                + " AND " + col_cost + " IS NOT NULL "
                 + " AND " + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
                 + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
@@ -3915,6 +3916,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + ")"
                 + " FROM " + tbl_stocks_history
                 + " WHERE " + col_username + " = 'admin'"
+                + " AND " + col_cost + " IS NOT NULL "
                 + " AND " + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
                 + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
@@ -4047,6 +4049,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + ")"
                 + " FROM " + tbl_stocks_history
                 + " WHERE " + col_username + " = 'admin'"
+                + " AND " + col_cost + " IS NOT NULL "
                 + " AND " + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
                 + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
