@@ -3,6 +3,7 @@ package com.watata.zpos;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -48,12 +49,10 @@ public class VariantsHdrAddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!editName.getText().toString().equals("") && !editName.getText().toString().equals("Click to Add")){
 
-                    String item_image_res = "" + imageView.getTag();
-
                     HelperVariantsHdr resulthelperVariantsHdr = new HelperVariantsHdr();
                     resulthelperVariantsHdr.setVar_hdr_id(helperVariantsHdrPrev.getVar_hdr_id());
                     resulthelperVariantsHdr.setVar_hdr_name(editName.getText().toString());
-                    resulthelperVariantsHdr.setVar_hdr_image(item_image_res);
+                    resulthelperVariantsHdr.setVar_hdr_image(imageView.getTag().toString());
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("resulthelperVariantsHdr", resulthelperVariantsHdr);
@@ -97,15 +96,15 @@ public class VariantsHdrAddActivity extends AppCompatActivity {
         editName.setText(helperVariantsHdrPrev.getVar_hdr_name());
         if (helperVariantsHdrPrev.getVar_hdr_image() != null){
             if (!helperVariantsHdrPrev.getVar_hdr_image().equals("0")){
-                imageView.setImageResource(Integer.parseInt(helperVariantsHdrPrev.getVar_hdr_image()));
+                imageView.setImageResource(getImageId(this, helperVariantsHdrPrev.getVar_hdr_image()));
                 imageView.setTag(helperVariantsHdrPrev.getVar_hdr_image());
             } else {
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag("" + R.drawable.ic_no_icon);
+                imageView.setTag("0");
             }
         } else {
             imageView.setImageResource(R.drawable.ic_no_icon);
-            imageView.setTag("" + R.drawable.ic_no_icon);
+            imageView.setTag("0");
         }
 
     }
@@ -120,7 +119,8 @@ public class VariantsHdrAddActivity extends AppCompatActivity {
     }
 
     public void openVariantsHdrIconsActivity() {
-        Intent intent = new Intent(this, VariantsHdrIconsActivity.class);
+        ///Intent intent = new Intent(this, VariantsHdrIconsActivity.class);
+        Intent intent = new Intent(this, ItemIconsActivity.class);
         //intent.putExtra("username", username.getText().toString());
         startActivityForResult(intent, 1);
     }
@@ -139,15 +139,16 @@ public class VariantsHdrAddActivity extends AppCompatActivity {
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
 
-                if (data.getIntExtra("iconSelected", 0) != 0
-                        && data.getIntExtra("iconSelected", 0)  != R.drawable.ic_no_icon
-                        && data.getIntExtra("iconSelected", 0)  != R.drawable.ic_add ) {
-                    imageView.setImageResource(data.getIntExtra("iconSelected", 0 ));
-                    imageView.setTag(data.getIntExtra("iconSelected", 0 ));
+                if (data.getStringExtra("iconSelected") != "0"
+                        && data.getStringExtra("iconSelected")  != "ic_no_icon"
+                        && data.getStringExtra("iconSelected")  != "ic_add" ) {
+                    imageView.setImageResource(getImageId(this, data.getStringExtra("iconSelected" )));
+                    imageView.setTag(data.getStringExtra("iconSelected" ));
                 } else {
-                    imageView.setImageResource(0);
-                    imageView.setTag(0);
+                    imageView.setImageResource(R.drawable.ic_no_icon);
+                    imageView.setTag("0");
                 }
+
 
             }
             if (resultCode == RESULT_CANCELED) {
@@ -155,6 +156,10 @@ public class VariantsHdrAddActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     private void popMessage(String s){

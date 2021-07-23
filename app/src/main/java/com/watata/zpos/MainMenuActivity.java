@@ -144,40 +144,40 @@ public class MainMenuActivity extends AppCompatActivity {
             public void onDateSet(DatePicker datePicker, int yyyy, int mm, int d) {
                 String mon, dd;
                 switch(mm){
-                    case 1:
+                    case 0:
                         mon = "Jan";
                         break;
-                    case 2:
+                    case 1:
                         mon = "Feb";
                         break;
-                    case 3:
+                    case 2:
                         mon = "Mar";
                         break;
-                    case 4:
+                    case 3:
                         mon = "Apr";
                         break;
-                    case 5:
+                    case 4:
                         mon = "May";
                         break;
-                    case 6:
+                    case 5:
                         mon = "Jun";
                         break;
-                    case 7:
+                    case 6:
                         mon = "Jul";
                         break;
-                    case 8:
+                    case 7:
                         mon = "Aug";
                         break;
-                    case 9:
+                    case 8:
                         mon = "Sep";
                         break;
-                    case 10:
+                    case 9:
                         mon = "Oct";
                         break;
-                    case 11:
+                    case 10:
                         mon = "Nov";
                         break;
-                    case 12:
+                    case 11:
                         mon = "Dec";
                         break;
                     default:

@@ -74,4 +74,12 @@ public class ChangesFB {
         reference.child("stock_histories").setValue("N");
     }
 
+    public void ChangesSales(){
+        reference.child("sales").setValue("Y");
+    }
+
+    public void NoChangesSales(){
+        reference.child("sales").setValue("N");
+    }
+
 }

@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -199,17 +200,17 @@ public class CategoryMenuActivity extends AppCompatActivity {
         imageView.setLayoutParams(lp80dp);
         if (!catImg.equals("0")) {
             //int id = getResources().getIdentifier(packageName + ":drawable/" + catImg, null, null);
-            imageView.setImageResource(Integer.parseInt(catImg));
-            imageView.setTag(Integer.parseInt(catImg));
+            imageView.setImageResource(getImageId(this, catImg));
+            imageView.setTag((catImg));
 
         } else {
             if (!catName.equals("")){
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
                 itextView.setText(catName.substring(0,1));
             } else {
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
 
         }
@@ -256,8 +257,8 @@ public class CategoryMenuActivity extends AppCompatActivity {
     }
 
     public void openItemMenuActivity(int id, ImageView imageView, TextView textView, TextView ntextView) {
-        if (imageView.getTag().equals(R.drawable.ic_add)) {
-            imageView.setTag(0);
+        if (imageView.getTag().equals("ic_add")) {
+            imageView.setTag("ic_add");
         }
 
 
@@ -310,6 +311,10 @@ public class CategoryMenuActivity extends AppCompatActivity {
         layoutSummary.populateSummarySales();
     }
     //SALES end
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
+    }
 
     private void popMessage(String s){
         Toast.makeText(this, "" + s, Toast.LENGTH_LONG).show();

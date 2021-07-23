@@ -3,6 +3,7 @@ package com.watata.zpos;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -51,13 +52,11 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!editName.getText().toString().equals("") && !editName.getText().toString().equals("Click to Add")){
 
-                    String item_image_res = "" + imageView.getTag();
-
                     HelperVariantsDtls resulhelperVariantsDtls = new HelperVariantsDtls();
                     resulhelperVariantsDtls.setVar_dtls_id(helperVariantsDtlsPrev.getVar_dtls_id());
                     resulhelperVariantsDtls.setVar_hdr_id(helperVariantsDtlsPrev.getVar_hdr_id());
                     resulhelperVariantsDtls.setVar_dtls_name(editName.getText().toString());
-                    resulhelperVariantsDtls.setVar_dtls_image(item_image_res);
+                    resulhelperVariantsDtls.setVar_dtls_image(imageView.getTag().toString());
                     resulhelperVariantsDtls.setVar_selling_price("" + editSellingPrice.getText());
                     if (checkBoxDefault.isChecked()){
                         resulhelperVariantsDtls.setVar_dtls_default("Y");
@@ -98,15 +97,15 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
         editName.setText(helperVariantsDtlsPrev.getVar_dtls_name());
         if (helperVariantsDtlsPrev.getVar_dtls_image() != null){
             if (!helperVariantsDtlsPrev.getVar_dtls_image().equals("0")){
-                imageView.setImageResource(Integer.parseInt(helperVariantsDtlsPrev.getVar_dtls_image()));
+                imageView.setImageResource(getImageId(this, helperVariantsDtlsPrev.getVar_dtls_image()));
                 imageView.setTag(helperVariantsDtlsPrev.getVar_dtls_image());
             } else {
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag("" + R.drawable.ic_no_icon);
+                imageView.setTag("0");
             }
         } else {
             imageView.setImageResource(R.drawable.ic_no_icon);
-            imageView.setTag("" + R.drawable.ic_no_icon);
+            imageView.setTag("0");
         }
 
         editSellingPrice.setText(helperVariantsDtlsPrev.getVar_selling_price());
@@ -130,7 +129,8 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
     }
 
     public void openVariantsDtlsIconsActivity() {
-        Intent intent = new Intent(this, VariantsDtlsIconsActivity.class);
+        ///Intent intent = new Intent(this, VariantsDtlsIconsActivity.class);
+        Intent intent = new Intent(this, ItemIconsActivity.class);
         //intent.putExtra("username", username.getText().toString());
         startActivityForResult(intent, 1);
     }
@@ -143,14 +143,14 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
 
-                if (data.getIntExtra("iconSelected", 0) != 0
-                        && data.getIntExtra("iconSelected", 0)  != R.drawable.ic_no_icon
-                        && data.getIntExtra("iconSelected", 0)  != R.drawable.ic_add ) {
-                    imageView.setImageResource(data.getIntExtra("iconSelected", 0 ));
-                    imageView.setTag(data.getIntExtra("iconSelected", 0 ));
+                if (data.getStringExtra("iconSelected") != "0"
+                        && data.getStringExtra("iconSelected")  != "ic_no_icon"
+                        && data.getStringExtra("iconSelected")  != "ic_add" ) {
+                    imageView.setImageResource(getImageId(this, data.getStringExtra("iconSelected" )));
+                    imageView.setTag(data.getStringExtra("iconSelected" ));
                 } else {
-                    imageView.setImageResource(0);
-                    imageView.setTag(0);
+                    imageView.setImageResource(R.drawable.ic_no_icon);
+                    imageView.setTag("0");
                 }
 
             }
@@ -159,6 +159,10 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
             }
         }
 
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     private void popMessage(String s){

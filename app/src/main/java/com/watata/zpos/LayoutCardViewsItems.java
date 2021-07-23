@@ -219,7 +219,7 @@ public class LayoutCardViewsItems {
 
                     String stockNames = "";
                     for(int i = 0; i < listOutOfStockNames.size(); i++){
-                        stockNames += " - " + listOutOfStockNames.get(i) + "\n";
+                        stockNames += " * " + listOutOfStockNames.get(i) + "\n";
                     }
                     //List no stocks End
 
@@ -229,8 +229,8 @@ public class LayoutCardViewsItems {
                         builder.setTitle("No Stocks Setup");
                         builder.setMessage("Please setup stocks for item " + helperItem.getItem_name() );
                     } else {
-                        builder.setTitle("Out of Stock");
-                        builder.setMessage(helperItem.getItem_name() + " is out stocks for the ff:\n\n" + stockNames );
+                        builder.setTitle("Out of Stock - LCVI01");
+                        builder.setMessage(helperItem.getItem_name() + " is out of stocks for the ff:\n\n" + stockNames );
                     }
                     builder.setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -342,29 +342,29 @@ public class LayoutCardViewsItems {
         imageView.setLayoutParams(lp80dp);
         if (helperItem.getItem_image() != null){
             if (!helperItem.getItem_image().equals("0")) {
-                imageView.setImageResource(Integer.parseInt(helperItem.getItem_image()));
-                imageView.setTag(Integer.parseInt(helperItem.getItem_image()));
+                imageView.setImageResource(getImageId(getContext(), helperItem.getItem_image()));
+                imageView.setTag(helperItem.getItem_image());
 
             } else {
                 if (!helperItem.getItem_name().equals("")){
-                    helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                    helperItem.setItem_image("0");
                     imageView.setImageResource(R.drawable.ic_no_icon);
-                    imageView.setTag(R.drawable.ic_no_icon);
+                    imageView.setTag("ic_no_icon");
                 } else {
-                    helperItem.setItem_image("" + R.drawable.ic_add);
+                    helperItem.setItem_image("ic_add");
                     imageView.setImageResource(R.drawable.ic_add);
-                    imageView.setTag(R.drawable.ic_add);
+                    imageView.setTag("ic_add");
                 }
             }
         } else {
             if (helperItem.getItem_name() != null){
-                helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                helperItem.setItem_image("0");
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
             } else {
-                helperItem.setItem_image("" + R.drawable.ic_add);
+                helperItem.setItem_image("ic_add");
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
         }
 
@@ -475,6 +475,10 @@ public class LayoutCardViewsItems {
                 }
                 break;
         }
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     public void openVariantsMenuActivity(HelperItem helperItem){

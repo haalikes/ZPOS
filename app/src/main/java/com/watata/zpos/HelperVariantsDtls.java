@@ -5,12 +5,12 @@ import java.io.Serializable;
 public class HelperVariantsDtls implements Serializable {
 
     private int var_hdr_id, var_dtls_id;
-    private String var_dtls_image, var_dtls_name, var_selling_price, var_dtls_default, var_dtls_add_on;
+    private String var_dtls_image, var_dtls_name, var_selling_price, var_dtls_default, var_dtls_add_on, composite_required;
 
     public HelperVariantsDtls() {
     }
 
-    public HelperVariantsDtls(int var_hdr_id, int var_dtls_id, String var_dtls_image, String var_dtls_name, String var_selling_price, String var_dtls_default, String var_dtls_add_on) {
+    public HelperVariantsDtls(int var_hdr_id, int var_dtls_id, String var_dtls_image, String var_dtls_name, String var_selling_price, String var_dtls_default, String var_dtls_add_on, String composite_required) {
         this.var_hdr_id = var_hdr_id;
         this.var_dtls_id = var_dtls_id;
         this.var_dtls_image = var_dtls_image;
@@ -18,6 +18,7 @@ public class HelperVariantsDtls implements Serializable {
         this.var_selling_price = var_selling_price;
         this.var_dtls_default = var_dtls_default;
         this.var_dtls_add_on = var_dtls_add_on;
+        this.composite_required = composite_required;
     }
 
     public int getVar_hdr_id() {
@@ -74,5 +75,13 @@ public class HelperVariantsDtls implements Serializable {
 
     public void setVar_dtls_add_on(String var_dtls_add_on) {
         this.var_dtls_add_on = var_dtls_add_on;
+    }
+
+    public String getComposite_required() {
+        return composite_required;
+    }
+
+    public void setComposite_required(String composite_required) {
+        this.composite_required = composite_required;
     }
 }

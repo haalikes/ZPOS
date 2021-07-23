@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -385,29 +386,29 @@ public class VariantsDtlsEditActivity extends AppCompatActivity {
         imageView.setLayoutParams(lp80dp);
         if (helperVariantsDtls.getVar_dtls_image() != null){
             if (!helperVariantsDtls.getVar_dtls_image().equals("0")) {
-                imageView.setImageResource(Integer.parseInt(helperVariantsDtls.getVar_dtls_image()));
-                imageView.setTag(Integer.parseInt(helperVariantsDtls.getVar_dtls_image()));
+                imageView.setImageResource(getImageId(this, helperVariantsDtls.getVar_dtls_image()));
+                imageView.setTag(helperVariantsDtls.getVar_dtls_image());
 
             } else {
                 if (!helperVariantsDtls.getVar_dtls_name().equals("")){
-                    helperVariantsDtls.setVar_dtls_image("" + R.drawable.ic_no_icon);
+                    helperVariantsDtls.setVar_dtls_image("0");
                     imageView.setImageResource(R.drawable.ic_no_icon);
-                    imageView.setTag(R.drawable.ic_no_icon);
+                    imageView.setTag("0");
                 } else {
-                    helperVariantsDtls.setVar_dtls_image("" + R.drawable.ic_add);
+                    helperVariantsDtls.setVar_dtls_image("ic_add");
                     imageView.setImageResource(R.drawable.ic_add);
-                    imageView.setTag(R.drawable.ic_add);
+                    imageView.setTag("ic_add");
                 }
             }
         } else {
             if (helperVariantsDtls.getVar_dtls_name() != null){
-                helperVariantsDtls.setVar_dtls_image("" + R.drawable.ic_no_icon);
+                helperVariantsDtls.setVar_dtls_image("0");
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
             } else {
-                helperVariantsDtls.setVar_dtls_image("" + R.drawable.ic_add);
+                helperVariantsDtls.setVar_dtls_image("ic_add");
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
         }
 
@@ -444,34 +445,39 @@ public class VariantsDtlsEditActivity extends AppCompatActivity {
 
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
-                /*
-                HelperItem resultHelperItem = (HelperItem) data.getSerializableExtra("resulthelperItem");
 
-                if (resultHelperItem.getItem_image() != null){
-                    if ( !resultHelperItem.getItem_image().equals("0") &&
-                            !resultHelperItem.getItem_image().equals("" + R.drawable.ic_no_icon) &&
-                            !resultHelperItem.getItem_image().equals("" + R.drawable.ic_add) ) {
-                        gImageView.setImageResource(Integer.parseInt(resultHelperItem.getItem_image()));
-                        gImageView.setTag(resultHelperItem.getItem_image());
-                        gTextView.setText(resultHelperItem.getItem_name());
+                //HelperItem resultHelperItem = (HelperItem) data.getSerializableExtra("resulhelperVariantsDtls");
+                HelperVariantsDtls resultVariantsDtls = (HelperVariantsDtls) data.getSerializableExtra("resulhelperVariantsDtls");
+
+                if (resultVariantsDtls.getVar_dtls_image() != null){
+                    if ( !resultVariantsDtls.getVar_dtls_image().equals("0") &&
+                            !resultVariantsDtls.getVar_dtls_image().equals("" + R.drawable.ic_no_icon) &&
+                            !resultVariantsDtls.getVar_dtls_image().equals("" + R.drawable.ic_add) ) {
+                        gImageView.setImageResource(getImageId(this, resultVariantsDtls.getVar_dtls_image()));
+                        gImageView.setTag(resultVariantsDtls.getVar_dtls_image());
+                        gTextView.setText(resultVariantsDtls.getVar_dtls_name());
                     } else {
-                        gTextView.setText(resultHelperItem.getItem_name());
-                        gnTextView.setText(( resultHelperItem.getItem_name()).substring(0,1));
+                        gTextView.setText(resultVariantsDtls.getVar_dtls_name());
+                        gnTextView.setText(( resultVariantsDtls.getVar_dtls_name()).substring(0,1));
                         gImageView.setImageResource(R.drawable.ic_no_icon);
-                        gImageView.setTag(R.drawable.ic_no_icon);
+                        gImageView.setTag("0");
                     }
                 } else {
-                    gTextView.setText(resultHelperItem.getItem_name());
-                    gnTextView.setText(( resultHelperItem.getItem_name()).substring(0,1));
+                    gTextView.setText(resultVariantsDtls.getVar_dtls_name());
+                    gnTextView.setText(( resultVariantsDtls.getVar_dtls_name()).substring(0,1));
                     gImageView.setImageResource(R.drawable.ic_no_icon);
-                    gImageView.setTag(R.drawable.ic_no_icon);
+                    gImageView.setTag("0");
                 }
-                */
+
             }
             if (resultCode == RESULT_CANCELED) {
                 popMessage("Nothing selected");
             }
         }
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     private void popMessage(String s){

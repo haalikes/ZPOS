@@ -82,7 +82,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Select stock"
-                            android:layout_weight="6"
+                            android:layout_weight="5"
                             android:background="@drawable/custom_textview_hdr"/>
 
                         <TextView
@@ -97,6 +97,12 @@
                             android:text="Unit"
                             android:layout_weight="1"
                             android:background="@drawable/custom_textview_hdr"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Req"
+                            android:layout_weight="1"
+                            android:background="@drawable/custom_textview_hdr"/>
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/item_comp_dtls"
@@ -109,7 +115,7 @@
                             android:id="@+id/item_stocks_spinner"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:layout_weight="6"/>
+                            android:layout_weight="5"/>
 
                         <EditText
                             android:id="@+id/item_stocks_qty"
@@ -122,6 +128,13 @@
                             android:layout_width="20dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"/>
+                        <CheckBox
+                            android:layout_width="20dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:id="@+id/cbItemReq"
+                            />
                     </LinearLayout>
 
 

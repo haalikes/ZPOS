@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -197,19 +198,18 @@ public class CategoryEditActivity extends AppCompatActivity {
         //ImageView
         final ImageView imageView = new ImageView(this);
         imageView.setLayoutParams(lp80dp);
-        if (!catImg.equals("0")) {
-            //int id = getResources().getIdentifier(packageName + ":drawable/" + catImg, null, null);
-            imageView.setImageResource(Integer.parseInt(catImg));
-            imageView.setTag(Integer.parseInt(catImg));
 
+        if (!catImg.equals("0")) {
+            imageView.setImageResource(getImageId(this, catImg));
+            imageView.setTag(catImg);
         } else {
             if (!catName.equals("")){
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
                 itextView.setText(catName.substring(0,1));
             } else {
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
 
         }
@@ -273,15 +273,15 @@ public class CategoryEditActivity extends AppCompatActivity {
     }
 
     public void openCategoryAddActivity(int id, ImageView imageView, TextView textView, TextView ntextView) {
-        if (imageView.getTag().equals(R.drawable.ic_add)) {
-            imageView.setTag(0);
+        if (imageView.getTag().equals("ic_add")) {
+            imageView.setTag("ic_add");
         }
 
 
         Intent intent = new Intent(this, CategoryAddActivity.class);
         intent.putExtra("catName", textView.getText().toString());
-        Integer resource = (Integer) imageView.getTag();
-        intent.putExtra("catImage", resource);
+        ///Integer resource = (Integer) imageView.getTag();
+        intent.putExtra("catImage", imageView.getTag().toString());
         intent.putExtra("catId", id);
         startActivityForResult(intent, 1);
 
@@ -296,18 +296,18 @@ public class CategoryEditActivity extends AppCompatActivity {
 
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
-                if (data.getIntExtra("catCurrentIcon", 0) != 0
-                        && data.getIntExtra("catCurrentIcon", 0)  != R.drawable.ic_no_icon
-                        && data.getIntExtra("catCurrentIcon", 0)  != R.drawable.ic_add ) {
-                    gImageView.setImageResource(data.getIntExtra("catCurrentIcon", 0 ));
-                    gImageView.setTag(data.getIntExtra("catCurrentIcon", 0));
+                if (data.getStringExtra("catCurrentIcon" ) != "0"
+                        && data.getStringExtra("catCurrentIcon" )  != "ic_no_icon"
+                        && data.getStringExtra("catCurrentIcon" )  != "ic_add" ) {
+                    gImageView.setImageResource(getImageId(this, data.getStringExtra("catCurrentIcon" )));
+                    Log.d("cattag=", "onActivityResult: " + data.getStringExtra("catCurrentIcon"));
+                    gImageView.setTag(data.getStringExtra("catCurrentIcon"));
                     gTextView.setText(data.getStringExtra("catCurrentName" ));
-
                 } else {
                     gTextView.setText(data.getStringExtra("catCurrentName" ));
                     gnTextView.setText(( data.getStringExtra("catCurrentName" )).substring(0,1));
                     gImageView.setImageResource(R.drawable.ic_no_icon);
-                    gImageView.setTag(R.drawable.ic_no_icon);
+                    gImageView.setTag("0");
                 }
             }
             if (resultCode == RESULT_CANCELED) {
@@ -375,6 +375,10 @@ public class CategoryEditActivity extends AppCompatActivity {
                 //Log.e("FB Error", "onCancelled", databaseError.toException());
             }
         });
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     private void popMessage(String s){

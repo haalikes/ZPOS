@@ -37,57 +37,57 @@ public class VariantsHdrIconsActivity extends AppCompatActivity {
         iDimsun.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(R.drawable.dimsun);
+                iconSelected("dimsun");
             }
         });
 
         iPizza.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(R.drawable.pizza);
+                iconSelected("pizza");
             }
         });
 
         iIcedrop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(R.drawable.icedrop);
+                iconSelected("icedrop");
             }
         });
 
         iDine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(R.drawable.dine);
+                iconSelected("dine");
             }
         });
 
         iIcecream.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(R.drawable.icecream);
+                iconSelected("icecream");
             }
         });
 
         iBlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(R.drawable.ic_block);
+                iconSelected("ic_block");
             }
         });
 
         iBlank.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                iconSelected(0);
+                iconSelected("0");
             }
         });
 
     }
 
-    public void iconSelected(int drawable){
+    public void iconSelected(String icon){
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("iconSelected", drawable);
+        resultIntent.putExtra("iconSelected", icon);
         setResult(RESULT_OK, resultIntent);
         finish();
     }

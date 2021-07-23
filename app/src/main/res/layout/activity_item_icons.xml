@@ -56,6 +56,7 @@
                     android:columnOrderPreserved="false"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:id="@+id/icongrid"
                     >
 
                     <androidx.cardview.widget.CardView
@@ -75,10 +76,10 @@
                             android:layout_height="match_parent">
 
                             <ImageView
-                                android:id="@+id/dimsun"
+                                android:id="@+id/item0"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:src="@drawable/dimsun"/>
+                                android:src="@drawable/burger"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -86,7 +87,7 @@
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="18sp"
-                                android:text="Dimsun"/>
+                                android:text="Burger"/>
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>
@@ -108,10 +109,10 @@
                             android:layout_height="match_parent">
 
                             <ImageView
-                                android:id="@+id/pizza"
+                                android:id="@+id/item01"
                                 android:layout_width="80dp"
                                 android:layout_height="80dp"
-                                android:src="@drawable/pizza"/>
+                                android:src="@drawable/burgerplain"/>
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -119,7 +120,173 @@
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="18sp"
-                                android:text="pizza"/>
+                                android:text="Burger Plain"/>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/item1"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/pizzetta"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                android:text="Pizzetta"/>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/item2"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/pizzettaduo"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                android:text="Pizzetta Duo"/>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/item3"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/pizzettabacon"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                android:text="Bacon"/>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/item4"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/pizzettabluecheese"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                android:text="Blue Cheese"/>
+
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+
+                        <LinearLayout
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/item5"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp"
+                                android:src="@drawable/pizzettabuffalochicken"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="18sp"
+                                android:text="Buff Chick"/>
 
                         </LinearLayout>
                     </androidx.cardview.widget.CardView>

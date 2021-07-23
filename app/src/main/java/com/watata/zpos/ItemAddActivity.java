@@ -3,6 +3,7 @@ package com.watata.zpos;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -53,15 +54,15 @@ public class ItemAddActivity extends AppCompatActivity {
         item_name.setText(helperItem.getItem_name());
         if (helperItem.getItem_image() != null){
             if (!helperItem.getItem_image().equals("0")){
-                item_image.setImageResource(Integer.parseInt(helperItem.getItem_image()));
+                item_image.setImageResource(getImageId(this, helperItem.getItem_image()));
                 item_image.setTag(helperItem.getItem_image());
             } else {
                 item_image.setImageResource(R.drawable.ic_no_icon);
-                item_image.setTag("" + R.drawable.ic_no_icon);
+                item_image.setTag("0");
             }
         } else {
             item_image.setImageResource(R.drawable.ic_no_icon);
-            item_image.setTag("" + R.drawable.ic_no_icon);
+            item_image.setTag("0");
         }
 
         item_selling_price.setText(helperItem.getItem_selling_price());
@@ -74,13 +75,11 @@ public class ItemAddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!item_name.getText().toString().equals("") && !item_name.getText().toString().equals("Click to Add")){
 
-                    String item_image_res = "" + item_image.getTag();
-
                     HelperItem resulthelperItem = new HelperItem();
                     resulthelperItem.setItem_id(item_id);
                     resulthelperItem.setCat_id(cat_id);
                     resulthelperItem.setItem_name(item_name.getText().toString());
-                    resulthelperItem.setItem_image(item_image_res);
+                    resulthelperItem.setItem_image(item_image.getTag().toString());
                     resulthelperItem.setItem_selling_price("" + item_selling_price.getText());
 
                     Intent resultIntent = new Intent();
@@ -155,14 +154,15 @@ public class ItemAddActivity extends AppCompatActivity {
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
 
-                if (data.getIntExtra("itemIconSelected", 0) != 0
-                        && data.getIntExtra("itemIconSelected", 0)  != R.drawable.ic_no_icon
-                        && data.getIntExtra("itemIconSelected", 0)  != R.drawable.ic_add ) {
-                    item_image.setImageResource(data.getIntExtra("itemIconSelected", 0 ));
-                    item_image.setTag(data.getIntExtra("itemIconSelected", 0 ));
+                //itemIconSelected
+                if (data.getStringExtra("iconSelected") != "0"
+                        && data.getStringExtra("iconSelected")  != "ic_no_icon"
+                        && data.getStringExtra("iconSelected")  != "ic_add" ) {
+                    item_image.setImageResource(getImageId(this, data.getStringExtra("iconSelected" )));
+                    item_image.setTag(data.getStringExtra("iconSelected" ));
                 } else {
-                    item_image.setImageResource(0);
-                    item_image.setTag(0);
+                    item_image.setImageResource(R.drawable.ic_no_icon);
+                    item_image.setTag("0");
                 }
 
             }
@@ -201,6 +201,11 @@ public class ItemAddActivity extends AppCompatActivity {
         //DatabaseReference reference = FirebaseDatabase.getInstance().getReference("items").child(helperItem.getCat_name());
         //reference.child("" + helperItem.getItem_id()).setValue(helperItem);
     }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
+    }
+
 
     private void popMessage(String s){
         Toast.makeText(this, "" + s, Toast.LENGTH_SHORT).show();

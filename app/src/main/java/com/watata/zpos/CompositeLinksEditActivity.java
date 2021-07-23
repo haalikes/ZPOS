@@ -41,20 +41,20 @@ import java.util.List;
 public class CompositeLinksEditActivity extends AppCompatActivity {
 
     int item_id;
-    String item_name;
+    String item_name, itemReq;
     float scale;
     Button addBtn, backBtn;
     Spinner spinner, spinnerStockNamesForVar, sItemUnit;
     TableLayout tlIncByVar, tlCompositeLinks;
     ProgressBar progressBar, progressBarIncByVar;
-    CheckBox inc_by_var;
+    CheckBox inc_by_var, cbItemReq;
     TextView tvThisPage;
     LinearLayout llVariantsSpinner;
 
     EditText item_qty; //, item_unit;
 
-    List<EditText> listQtyVarCompDtls = new LinkedList<>();
-    List<EditText> listUnitVarCompDtls = new LinkedList<>();
+    ///List<EditText> listQtyVarCompDtls = new LinkedList<>();
+    ///List<EditText> listUnitVarCompDtls = new LinkedList<>();
 
 
     List<HelperCompositeLinks> listHelperCompositeLinks = new LinkedList<>();
@@ -103,6 +103,8 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
         tvThisPage = findViewById(R.id.tvThisPage);
         llVariantsSpinner = findViewById(R.id.llVariantsSpinner);
         spinnerStockNamesForVar = findViewById(R.id.spinnerStockNamesForVar);
+        cbItemReq = findViewById(R.id.cbItemReq);
+        itemReq = "Y";
 
         tvThisPage.setText("Composite of " + item_name);
 
@@ -123,6 +125,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
                 helperCompositeLink.setQty(item_qty.getText().toString());
                 //helperCompositeLink.setUnit(item_unit.getText().toString());
                 helperCompositeLink.setUnit(sItemUnit.getSelectedItem().toString());
+                if (itemReq=="Y") helperCompositeLink.setReq(itemReq);
                 if (inc_by_var.isChecked()){
                     helperCompositeLink.setInc_by_var("Y");
                 }
@@ -163,6 +166,17 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
             }
         });
 
+        cbItemReq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (cbItemReq.isChecked()){
+                    itemReq = "Y";
+                } else {
+                    itemReq = "";
+                }
+            }
+        });
+
     }
 
     public void findQtyUnitVarDtls(){
@@ -185,6 +199,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
         param0 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2);
         tableRowHdr.addView(createTextViewTable("Qty", "header" ), param0);
         tableRowHdr.addView(createTextViewTable("Unit", "header" ), param0);
+        tableRowHdr.addView(createTextViewTable("Req", "header" ), param0);
         tableRowHdr.addView(createTextViewTable("(+)", "header" ), param0);
 
         for (int i = 0; i < listHelperVariantsLinks.size(); i++){
@@ -214,19 +229,22 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
 
             param = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2);
 
-            EditText editTextQty, editTextUnit;
-            Spinner sUnit;
+            EditText etQty, etUnit;
+            //Spinner sUnit;
 
-            editTextQty = createEditTextTable(getCompLinkQty(helperVariantsDtl.getVar_hdr_id(), helperVariantsDtl.getVar_dtls_id()));
-            listQtyVarCompDtls.add(editTextQty);
-            tableRow.addView(editTextQty, param);
+            etQty = createEditTextTable(getCompLinkQty(helperVariantsDtl.getVar_hdr_id(), helperVariantsDtl.getVar_dtls_id()));
+            ///listQtyVarCompDtls.add(editTextQty);
+            tableRow.addView(etQty, param);
 
-            editTextUnit = createEditTextTable(getCompLinkUnit(helperVariantsDtl.getVar_hdr_id(), helperVariantsDtl.getVar_dtls_id()));
-            listUnitVarCompDtls.add(editTextUnit);
-            tableRow.addView(editTextUnit, param);
+            etUnit = createEditTextTable(getCompLinkUnit(helperVariantsDtl.getVar_hdr_id(), helperVariantsDtl.getVar_dtls_id()));
+            ///listUnitVarCompDtls.add(editTextUnit);
+            tableRow.addView(etUnit, param);
             //sUnit = createSpinnerUnit(getCompLinkUnit(helperVariantsDtl.getVar_hdr_id(), helperVariantsDtl.getVar_dtls_id()));
             //tableRow.addView(sUnit, param);
 
+            CheckBox cbOptional = new CheckBox(this);
+            cbOptional.setChecked(true);
+            tableRow.addView(cbOptional, param);
 
             ImageView addImage;
             HelperCompositeLinks helperCompositeLink = new HelperCompositeLinks();
@@ -234,7 +252,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
             helperCompositeLink.setStock_id(getStockId(spinnerStockNamesForVar.getSelectedItem().toString()));
             helperCompositeLink.setVar_hdr_id("" + helperVariantsDtl.getVar_hdr_id());
             helperCompositeLink.setVar_dtls_id("" + helperVariantsDtl.getVar_dtls_id());
-            addImage = addImageVIew(helperCompositeLink, editTextQty, editTextUnit);
+            addImage = addImageVIew(helperCompositeLink, etQty, etUnit, cbOptional);
             tableRow.addView(addImage, param);
     }
 
@@ -371,7 +389,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
 
         // Header
         TableRow tableRowHdr = new TableRow(this);
-        tableRowHdr.setWeightSum(30);
+        tableRowHdr.setWeightSum(32);
         tlCompositeLinks.addView(tableRowHdr);
         //columns
         TableRow.LayoutParams param0 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2);
@@ -386,10 +404,11 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
         param0 = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2);
         tableRowHdr.addView(createTextViewTable("Qty", "header" ), param0);
         tableRowHdr.addView(createTextViewTable("Unit", "header" ), param0);
+        tableRowHdr.addView(createTextViewTable("Req", "header" ), param0);
 
         for (int row = listHelperCompositeLinks.size() - 1; row >= 0 ; row--){
             TableRow tableRow = new TableRow(this);
-            tableRow.setWeightSum(30);
+            tableRow.setWeightSum(32);
             tlCompositeLinks.addView(tableRow);
 
             //columns
@@ -413,6 +432,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
             param = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2);
             tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getQty()), param);
             tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getUnit()), param);
+            tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getReq()), param);
         }
 
 
@@ -527,7 +547,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
         return delImmage;
     }
 
-    public ImageView addImageVIew(final HelperCompositeLinks helperCompositeLink, final EditText etQty, final EditText etUnit){
+    public ImageView addImageVIew(final HelperCompositeLinks helperCompositeLink, final EditText etQty, final EditText etUnit, final CheckBox cbReq){
         int dp35 = (int) (35 * scale + 0.5f);
         LinearLayout.LayoutParams lp35dp = new LinearLayout.LayoutParams( dp35, dp35);
 
@@ -545,6 +565,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
 
                 helperCompositeLink.setQty(etQty.getText().toString());
                 helperCompositeLink.setUnit(etUnit.getText().toString());
+                if (cbReq.isChecked()) helperCompositeLink.setReq("Y");
                 addCompositeLinks(helperCompositeLink);
 
             }

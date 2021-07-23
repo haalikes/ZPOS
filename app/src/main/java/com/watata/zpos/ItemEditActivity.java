@@ -8,6 +8,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.solver.widgets.Helper;
 
 import android.bluetooth.le.BluetoothLeAdvertiser;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -297,29 +298,29 @@ public class ItemEditActivity extends AppCompatActivity {
         imageView.setLayoutParams(lp80dp);
         if (helperItem.getItem_image() != null){
             if (!helperItem.getItem_image().equals("0")) {
-                imageView.setImageResource(Integer.parseInt(helperItem.getItem_image()));
-                imageView.setTag(Integer.parseInt(helperItem.getItem_image()));
+                imageView.setImageResource(getImageId(this, helperItem.getItem_image()));
+                imageView.setTag(helperItem.getItem_image());
 
             } else {
                 if (!helperItem.getItem_name().equals("")){
-                    helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                    helperItem.setItem_image("0");
                     imageView.setImageResource(R.drawable.ic_no_icon);
-                    imageView.setTag(R.drawable.ic_no_icon);
+                    imageView.setTag("0");
                 } else {
-                    helperItem.setItem_image("" + R.drawable.ic_add);
+                    helperItem.setItem_image("ic_add");
                     imageView.setImageResource(R.drawable.ic_add);
-                    imageView.setTag(R.drawable.ic_add);
+                    imageView.setTag("ic_add");
                 }
             }
         } else {
             if (helperItem.getItem_name() != null){
-                helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                helperItem.setItem_image("0");
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
             } else {
-                helperItem.setItem_image("" + R.drawable.ic_add);
+                helperItem.setItem_image("ic_add");
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
         }
 
@@ -453,34 +454,38 @@ public class ItemEditActivity extends AppCompatActivity {
 
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
-                /*
+
                 HelperItem resultHelperItem = (HelperItem) data.getSerializableExtra("resulthelperItem");
 
                 if (resultHelperItem.getItem_image() != null){
                     if ( !resultHelperItem.getItem_image().equals("0") &&
                             !resultHelperItem.getItem_image().equals("" + R.drawable.ic_no_icon) &&
                             !resultHelperItem.getItem_image().equals("" + R.drawable.ic_add) ) {
-                        gImageView.setImageResource(Integer.parseInt(resultHelperItem.getItem_image()));
+                        gImageView.setImageResource(getImageId(this, resultHelperItem.getItem_image()));
                         gImageView.setTag(resultHelperItem.getItem_image());
                         gTextView.setText(resultHelperItem.getItem_name());
                     } else {
                         gTextView.setText(resultHelperItem.getItem_name());
                         gnTextView.setText(( resultHelperItem.getItem_name()).substring(0,1));
                         gImageView.setImageResource(R.drawable.ic_no_icon);
-                        gImageView.setTag(R.drawable.ic_no_icon);
+                        gImageView.setTag("0");
                     }
                 } else {
                     gTextView.setText(resultHelperItem.getItem_name());
                     gnTextView.setText(( resultHelperItem.getItem_name()).substring(0,1));
                     gImageView.setImageResource(R.drawable.ic_no_icon);
-                    gImageView.setTag(R.drawable.ic_no_icon);
+                    gImageView.setTag("0");
                 }
-                */
+
             }
             if (resultCode == RESULT_CANCELED) {
                 popMessage("Nothing selected");
             }
         }
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     private void popMessage(String s){

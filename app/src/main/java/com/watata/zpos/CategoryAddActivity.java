@@ -3,6 +3,7 @@ package com.watata.zpos;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,8 +33,8 @@ public class CategoryAddActivity extends AppCompatActivity {
 
         setupXmlIds();
         eCatName.setText(getIntent().getStringExtra("catName"));
-        iCatSelected.setImageResource(getIntent().getIntExtra("catImage", 0));
-        iCatSelected.setTag(getIntent().getIntExtra("catImage", 0));
+        iCatSelected.setImageResource(getImageId(this, getIntent().getStringExtra("catImage")));
+        iCatSelected.setTag(getIntent().getStringExtra("catImage"));
         cat_id = getIntent().getIntExtra("catId",0);
         setupListeners();
 
@@ -54,11 +55,13 @@ public class CategoryAddActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (!eCatName.getText().toString().equals("") && !eCatName.getText().toString().equals("Click to Add")){
                     Intent resultIntent = new Intent();
-                    Integer resource = (Integer) iCatSelected.getTag();
-                    resultIntent.putExtra("catCurrentIcon", resource);
-                    resultIntent.putExtra("catCurrentName", eCatName.getText().toString() );
+                    ///Integer resource = (Integer) iCatSelected.getTag();
+                    ///resultIntent.putExtra("catCurrentIcon", resource);
 
-                    HelperCategory helperCategory = new HelperCategory(cat_id, resource.toString(), eCatName.getText().toString());
+                    resultIntent.putExtra("catCurrentName", eCatName.getText().toString() );
+                    resultIntent.putExtra("catCurrentIcon", iCatSelected.getTag().toString());
+
+                    HelperCategory helperCategory = new HelperCategory(cat_id, iCatSelected.getTag().toString(), eCatName.getText().toString());
                     addCategoryFB(helperCategory);
 
                     setResult(RESULT_OK, resultIntent);
@@ -95,7 +98,8 @@ public class CategoryAddActivity extends AppCompatActivity {
     }
 
     public void openCategoryIconsActivity() {
-        Intent intent = new Intent(this, CategoryIconsActivity.class);
+        ///Intent intent = new Intent(this, CategoryIconsActivity.class);
+        Intent intent = new Intent(this, ItemIconsActivity.class);
         //intent.putExtra("username", username.getText().toString());
         startActivityForResult(intent, 1);
     }
@@ -115,16 +119,15 @@ public class CategoryAddActivity extends AppCompatActivity {
         if (requestCode == 1){
             if (resultCode == RESULT_OK) {
 
-                if (data.getIntExtra("catIconSelected", 0) != 0
-                        && data.getIntExtra("catIconSelected", 0)  != R.drawable.ic_no_icon
-                        && data.getIntExtra("catIconSelected", 0)  != R.drawable.ic_add ) {
-                    iCatSelected.setImageResource(data.getIntExtra("catIconSelected", 0 ));
-                    iCatSelected.setTag(data.getIntExtra("catIconSelected", 0 ));
+                //catIconSelected
+                if (data.getStringExtra("iconSelected") != "0"
+                        && data.getStringExtra("iconSelected")  != "ic_no_icon"
+                        && data.getStringExtra("iconSelected")  != "ic_add" ) {
+                    iCatSelected.setImageResource(getImageId(this, data.getStringExtra("iconSelected" )));
+                    iCatSelected.setTag(data.getStringExtra("iconSelected" ));
                 } else {
-                    //int id = getResources().getIdentifier("watata.clabsme.zinventory:drawable/" + "ic_block", null, null);
-                    //iCatSelected.setImageResource(id);
-                    iCatSelected.setImageResource(0);
-                    iCatSelected.setTag(0);
+                    iCatSelected.setImageResource(R.drawable.ic_no_icon);
+                    iCatSelected.setTag("0");
                 }
 
             }
@@ -140,6 +143,10 @@ public class CategoryAddActivity extends AppCompatActivity {
 
         ChangesFB changesFB = new ChangesFB();
         changesFB.ChangesInCategory();
+    }
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
     }
 
     private void popMessage(String s){

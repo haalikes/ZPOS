@@ -35,7 +35,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/z_200_200_trans"/>
+                android:src="@drawable/zczach"/>
 
         </RelativeLayout>
 
@@ -188,7 +188,7 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/z_200_200_trans"/>
+                        android:src="@drawable/zczach"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -347,7 +347,7 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/z_200_200_trans"/>
+                        android:src="@drawable/zczach"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -459,7 +459,7 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/z_200_200_trans"/>
+                        android:src="@drawable/zczach"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -494,7 +494,7 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/z_200_200_trans"/>
+                        android:src="@drawable/zczach"/>
 
                     <TextView
                         android:layout_width="wrap_content"

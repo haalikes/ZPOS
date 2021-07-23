@@ -13,12 +13,12 @@ public class HelperCompositeLinks {
     //both use same variants for small medium large, but different stock_id
 
     private int composite_link_id, item_id, stock_id;
-    private String var_hdr_id, var_dtls_id, qty, unit, inc_by_var;
+    private String var_hdr_id, var_dtls_id, qty, unit, inc_by_var, req;
 
     public HelperCompositeLinks() {
     }
 
-    public HelperCompositeLinks(int composite_link_id, int item_id, int stock_id, String var_hdr_id, String var_dtls_id, String qty, String unit, String inc_by_var) {
+    public HelperCompositeLinks(int composite_link_id, int item_id, int stock_id, String var_hdr_id, String var_dtls_id, String qty, String unit, String inc_by_var, String req) {
         this.composite_link_id = composite_link_id;
         this.item_id = item_id;
         this.stock_id = stock_id;
@@ -27,6 +27,7 @@ public class HelperCompositeLinks {
         this.qty = qty;
         this.unit = unit;
         this.inc_by_var = inc_by_var;
+        this.req = req;
     }
 
     public int getComposite_link_id() {
@@ -91,5 +92,13 @@ public class HelperCompositeLinks {
 
     public void setInc_by_var(String inc_by_var) {
         this.inc_by_var = inc_by_var;
+    }
+
+    public String getReq() {
+        return req;
+    }
+
+    public void setReq(String req) {
+        this.req = req;
     }
 }

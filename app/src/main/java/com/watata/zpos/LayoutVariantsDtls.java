@@ -348,28 +348,28 @@ public class LayoutVariantsDtls {
         imageView.setLayoutParams(lp80dp);
         if (helperItem.getItem_image() != null){
             if (!helperItem.getItem_image().equals("0")) {
-                imageView.setImageResource(Integer.parseInt(helperItem.getItem_image()));
-                imageView.setTag(Integer.parseInt(helperItem.getItem_image()));
+                imageView.setImageResource(getImageId(getContext(), helperItem.getItem_image()));
+                imageView.setTag(helperItem.getItem_image());
             } else {
                 if (!helperItem.getItem_name().equals("")){
-                    helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                    helperItem.setItem_image("0");
                     imageView.setImageResource(R.drawable.ic_no_icon);
-                    imageView.setTag(R.drawable.ic_no_icon);
+                    imageView.setTag("0");
                 } else {
-                    helperItem.setItem_image("" + R.drawable.ic_add);
+                    helperItem.setItem_image("ic_add");
                     imageView.setImageResource(R.drawable.ic_add);
-                    imageView.setTag(R.drawable.ic_add);
+                    imageView.setTag("ic_add");
                 }
             }
         } else {
             if (helperItem.getItem_name() != null){
-                helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                helperItem.setItem_image("0");
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
             } else {
-                helperItem.setItem_image("" + R.drawable.ic_add);
+                helperItem.setItem_image("ic_add");
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
         }
 
@@ -613,11 +613,15 @@ public class LayoutVariantsDtls {
                         insertAllCurrentVariantsDetails();
                     } else {
 
+
                         //List no stocks Start
                         List<String> listOutOfStockNames = new LinkedList<>();
                         listOutOfStockNames.clear();
                         //listOutOfStockNames = helperDatabase.listOutOfStocks(helperItem);
-                        if(var_hdr_id_temp!= null){
+
+
+                        //This part is use to verify selected options are correct
+                        if(var_hdr_id_temp!= null && !var_hdr_id_temp.equals("")){
                             HelperItem helperItemTemp = new HelperItem();
                             helperItemTemp.setItem_id(Integer.parseInt(var_dtls_id_temp));
                             listOutOfStockNames = helperDatabase.listOfStocks(helperItemTemp, "" + helperItem.getItem_id(), var_hdr_id_temp);
@@ -625,22 +629,31 @@ public class LayoutVariantsDtls {
                             listOutOfStockNames = helperDatabase.listOfStocks(helperItem);
                         }
 
+                        //Get list of out of stocks in item, if none, get list for variants
+                        /*
+                        listOutOfStockNames = helperDatabase.listOfStocks(helperItem);
+                        if (listOutOfStockNames.size()==0){
+                            HelperItem helperItemTemp = new HelperItem();
+                            helperItemTemp.setItem_id(Integer.parseInt(var_dtls_id_temp));
+                            listOutOfStockNames = helperDatabase.listOfStocks(helperItemTemp, "" + helperItem.getItem_id(), var_hdr_id_temp);
+                        }
+                        */
+
 
                         String stockNames = "";
                         for(int i = 0; i < listOutOfStockNames.size(); i++){
-                            stockNames += " - " + listOutOfStockNames.get(i) + "\n";
+                            stockNames += " * " + listOutOfStockNames.get(i) + "\n";
                         }
                         //List no stocks End
-
                         //Start alert
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
 
                         if((stockNames.equals(""))){
-                            builder.setTitle("Out of stock.");
-                            builder.setMessage( "Cannot add another order, please verify stocks available." );
+                            builder.setTitle("Out of stock - LVD01");
+                            builder.setMessage( "Cannot add another order, please check option select or stocks available." );
                         } else {
-                            builder.setTitle("Out of Stock");
-                            builder.setMessage(helperItem.getItem_name() + " is out stocks for the ff:\n\n" + stockNames );
+                            builder.setTitle("Out of Stock - LVD02");
+                            builder.setMessage(helperItem.getItem_name() + " is out of stocks for the ff:\n\n" + stockNames );
                         }
 
                         builder.setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
@@ -651,7 +664,6 @@ public class LayoutVariantsDtls {
                         AlertDialog alert = builder.create();
                         alert.show();
                         //End alert
-
                     }
 
 
@@ -694,8 +706,8 @@ public class LayoutVariantsDtls {
                         builder.setTitle("No Stocks Setup");
                         builder.setMessage("Please setup stocks for variant " + helperItem.getItem_name() );
                     } else {
-                        builder.setTitle("Out of Stock");
-                        builder.setMessage(helperItem.getItem_name() + " is out stocks for the ff:\n\n" + stockNames );
+                        builder.setTitle("Out of Stock - LVD03");
+                        builder.setMessage(helperItem.getItem_name() + " is out of stocks for the ff:\n\n" + stockNames );
                     }
                     builder.setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -715,42 +727,76 @@ public class LayoutVariantsDtls {
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    HelperSales helperSaleVar = new HelperSales();
-                    helperSaleVar.setItem_id(item_id);
-                    helperSaleVar.setItem_name(helperItem.getItem_name());
-                    helperSaleVar.setSelling_price(helperItem.getItem_selling_price());
-                    helperSaleVar.setMachine_name("pos1");
-                    helperSaleVar.setCreated_by("admin");
-                    helperSaleVar.setCompleted("W");
-                    helperSaleVar.setQty("1");
-                    helperSaleVar.setVar_hdr_id("" + var_hdr_id);
-                    helperSaleVar.setVar_dtls_id("" + helperItem.getItem_id());
-                    helperSaleVar.setTransaction_counter(helperDatabase.nextTransactionCounter());
-                    helperSaleVar.setTransaction_per_entry(helperDatabase.nextTransactionPerEntry());
-                    if (helperDatabase.variantExists(helperSaleVar)){
-                        helperSaleVar.setSort_order_id(helperDatabase.getSortOrderIdVariant(helperSaleVar));
+                    if (helperDatabase.stocksAvailableVarOnly(helperItem, "" + item_id, "" + var_hdr_id) <= 0 && !rb.isChecked() ) {
+                        linearLayout.setBackground(context.getResources().getDrawable(R.drawable.custom_ll_out_of_stock, context.getTheme()));
+
+
+                        List<String> listOutOfStockNames = new LinkedList<>();
+                        listOutOfStockNames.clear();
+                        //listOutOfStockNames = helperDatabase.listOutOfStocks(helperItem, item_id, var_hdr_id);
+                        listOutOfStockNames = helperDatabase.listOfStocks(helperItem, "" + item_id, "" + var_hdr_id);
+
+                        String stockNames = "";
+                        for(int i = 0; i < listOutOfStockNames.size(); i++){
+                            stockNames += " - " + listOutOfStockNames.get(i) + " \n";
+                        }
+                        //Start alert
+                        AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                        if(stockNames==null || stockNames.equals("")){
+                            builder.setTitle("No Stocks Setup");
+                            builder.setMessage("Please setup stocks for variant " + helperItem.getItem_name() );
+                        } else {
+                            builder.setTitle("Out of Stock - LVD04");
+                            builder.setMessage(helperItem.getItem_name() + " is out of stocks for the ff:\n\n" + stockNames );
+                        }
+                        builder.setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        //End alert
+
                     } else {
-                        helperSaleVar.setSort_order_id(helperDatabase.nextSortOrderIdVariant(helperSaleVar));
+                        linearLayout.setBackground(context.getResources().getDrawable(R.drawable.custom_ll_variants, context.getTheme()));
+
+                        HelperSales helperSaleVar = new HelperSales();
+                        helperSaleVar.setItem_id(item_id);
+                        helperSaleVar.setItem_name(helperItem.getItem_name());
+                        helperSaleVar.setSelling_price(helperItem.getItem_selling_price());
+                        helperSaleVar.setMachine_name("pos1");
+                        helperSaleVar.setCreated_by("admin");
+                        helperSaleVar.setCompleted("W");
+                        helperSaleVar.setQty("1");
+                        helperSaleVar.setVar_hdr_id("" + var_hdr_id);
+                        helperSaleVar.setVar_dtls_id("" + helperItem.getItem_id());
+                        helperSaleVar.setTransaction_counter(helperDatabase.nextTransactionCounter());
+                        helperSaleVar.setTransaction_per_entry(helperDatabase.nextTransactionPerEntry());
+                        if (helperDatabase.variantExists(helperSaleVar)) {
+                            helperSaleVar.setSort_order_id(helperDatabase.getSortOrderIdVariant(helperSaleVar));
+                        } else {
+                            helperSaleVar.setSort_order_id(helperDatabase.nextSortOrderIdVariant(helperSaleVar));
+                        }
+
+                        updateListCurrentVariantsDetails(helperSaleVar);
+
+                        if (helperDatabase.itemExists(helperSaleVar)) {
+                            clickedVariantButn = true;
+                            helperDatabase.deleteVariant(helperSaleVar);
+                            insertThisCurrentVariantsDetails(helperSaleVar);
+                            //layoutSummary.changeInsertVariant(helperSaleVar);
+                            //layoutSummary.insertSaleVariant(helperItem, item_id, item_name, var_hdr_id);
+                        }
+                        /*
+                        else {
+                            popMessage("Please select item first before selecting variant");
+                        }
+                        */
+
+                        hdrRadioGroup.enableRadio(rb);
+
                     }
-
-                    updateListCurrentVariantsDetails(helperSaleVar);
-
-                    if (helperDatabase.itemExists(helperSaleVar)){
-                        clickedVariantButn = true;
-                        helperDatabase.deleteVariant(helperSaleVar);
-                        insertThisCurrentVariantsDetails(helperSaleVar);
-                        //layoutSummary.changeInsertVariant(helperSaleVar);
-                        //layoutSummary.insertSaleVariant(helperItem, item_id, item_name, var_hdr_id);
-                    }
-                    /*
-                    else {
-                        popMessage("Please select item first before selecting variant");
-                    }
-                    */
-
-                    hdrRadioGroup.enableRadio(rb);
-
-
 
                 }
             });
@@ -777,33 +823,34 @@ public class LayoutVariantsDtls {
         imageView.setLayoutParams(lp80dp);
         if (helperItem.getItem_image() != null){
             if (!helperItem.getItem_image().equals("0")) {
-                imageView.setImageResource(Integer.parseInt(helperItem.getItem_image()));
-                imageView.setTag(Integer.parseInt(helperItem.getItem_image()));
+                imageView.setImageResource(getImageId(getContext(), helperItem.getItem_image()));
+                imageView.setTag((helperItem.getItem_image()));
 
             } else {
                 if (!helperItem.getItem_name().equals("")){
-                    helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                    helperItem.setItem_image("0");
                     imageView.setImageResource(R.drawable.ic_no_icon);
-                    imageView.setTag(R.drawable.ic_no_icon);
+                    imageView.setTag("0");
                 } else {
-                    helperItem.setItem_image("" + R.drawable.ic_add);
+                    helperItem.setItem_image("ic_add");
                     imageView.setImageResource(R.drawable.ic_add);
-                    imageView.setTag(R.drawable.ic_add);
+                    imageView.setTag("ic_add");
                 }
             }
         } else {
             if (helperItem.getItem_name() != null){
-                helperItem.setItem_image("" + R.drawable.ic_no_icon);
+                helperItem.setItem_image("0");
                 imageView.setImageResource(R.drawable.ic_no_icon);
-                imageView.setTag(R.drawable.ic_no_icon);
+                imageView.setTag("0");
             } else {
-                helperItem.setItem_image("" + R.drawable.ic_add);
+                helperItem.setItem_image("ic_add");
                 imageView.setImageResource(R.drawable.ic_add);
-                imageView.setTag(R.drawable.ic_add);
+                imageView.setTag("ic_add");
             }
         }
 
         ///if(!helperDatabase.stocksOk(helperItem, item_id, var_hdr_id)){
+        //Log.d("currentstocks", "current stock" + helperDatabase.stocksAvailable(helperItem, "" + item_id, "" + var_hdr_id));
         if(helperDatabase.stocksAvailable(helperItem, "" + item_id, "" + var_hdr_id)<=0){
             imageView.setImageResource(R.drawable.ic_out_of_stock);
         }
@@ -811,6 +858,10 @@ public class LayoutVariantsDtls {
         return imageView;
     }
     //CARDVIEW with RB end
+
+    public static int getImageId(Context context, String imageName) {
+        return context.getResources().getIdentifier("drawable/" + imageName, null, context.getPackageName());
+    }
 
     private void popMessage(String s){
         Toast.makeText(context, "" + s, Toast.LENGTH_LONG).show();

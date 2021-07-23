@@ -16,6 +16,7 @@ import androidx.constraintlayout.solver.widgets.Helper;
 
 public class HelperDatabase extends SQLiteOpenHelper {
     private static final int sale_sorter = 100;
+    private static final int days_covered = 120;
 
     private static final String DB_NAME = "ZPOS_TBLS";
 
@@ -77,6 +78,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     private static final String col_var_selling_price = "var_selling_price";
     private static final String col_var_dtls_default = "var_dtls_default";
     private static final String col_var_dtls_add_on = "var_dtls_add_on";
+    private static final String col_composite_required = "composite_required"; // null = Yes, N = No
 
     //sales
     private static final String tbl_sales = "sales";
@@ -107,6 +109,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     private static final String col_variants_dtls = "variants_dtls";
     private static final String col_composite_links = "composite_links";
     private static final String col_stock_histories = "stock_histories";
+    private static final String col_sales = "sales";
 
 
 
@@ -119,6 +122,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     //private static final String col_var_dtls_id = "var_dtls_id";
     //private static final String col_qty = "qty";
     private static final String col_unit = "unit";
+    private static final String col_req = "req";
 
     //dine in out
     private static final String tbl_dine_in_out = "dine_in_out";
@@ -126,7 +130,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
 
     public HelperDatabase(Context context) {
-        super(context, DB_NAME, null, 65);
+        super(context, DB_NAME, null, 67);
     }
 
     @Override
@@ -192,6 +196,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                     + " ," + col_var_selling_price + " TEXT "
                     + " ," + col_var_dtls_default + " TEXT "
                     + " ," + col_var_dtls_add_on + " TEXT "
+                    + " ," + col_composite_required + " TEXT "
                     + ")";
             db.execSQL(createTable);
 
@@ -224,6 +229,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                     + " ," + col_variants_dtls + " TEXT "
                     + " ," + col_composite_links + " TEXT "
                     + " ," + col_stock_histories + " TEXT "
+                    + " ," + col_sales +  " TEXT "
             + ")";
             db.execSQL(createTable);
 
@@ -235,6 +241,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                     + " ," + col_var_dtls_id + " TEXT "
                     + " ," + col_qty + " TEXT "
                     + " ," + col_unit + " TEXT "
+                    + " ," + col_req + " TEXT "
                     + ")";
             db.execSQL(createTable);
 
@@ -824,6 +831,13 @@ public class HelperDatabase extends SQLiteOpenHelper {
                             + " WHERE b." + col_stock_id + " = aa." + col_stock_id
                             + " AND aa." + col_item_id + " = " + helperItem.getItem_id()
                             + " AND aa." + col_var_hdr_id + " is NULL ) "
+                            + " union all "
+                            + "SELECT 0 " + col_qty
+                            + ", c." + col_unit
+                            + ", c." + col_stock_id
+                            + " FROM " + tbl_composite_links + " c "
+                            + " WHERE c." + col_item_id  + " =  " + helperItem.getItem_id()
+                            + " AND c." + col_var_hdr_id + " IS NULL "
                             ;
 
         String query_sub2 = "SELECT SUM( aa." + col_qty + " ) " + col_qty
@@ -848,11 +862,11 @@ public class HelperDatabase extends SQLiteOpenHelper {
                             + " FROM ( " + query_sub2 + " ) ww "
                             ;
 
-        String query_sub4 = "SELECT MIN(uu." + col_qty + ")" + col_qty
+        String query_sub4 = "SELECT MIN( uu." + col_qty + " )" + col_qty
                             + " FROM (" + query_sub3 + " ) uu"
                             ;
 
-        Log.d("stocksOkRemainingOrders", query_sub4);
+        Log.d("stocksOkRemainingOrderi", query_sub4);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -887,7 +901,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         //REMAINING ORDERS query
 
-        String query_sub0 = "SELECT " + col_stock_id
+        String query_sub0item = "SELECT " + col_stock_id
                                 + ", SUM(  " + col_qty + " ) " + col_qty
                                 + ", " + col_unit
                                 + " FROM " + tbl_composite_links
@@ -897,7 +911,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + ", " + col_unit
                                 ;
 
-        String query_sub100 = "SELECT " + col_stock_id
+        String query_sub100var = "SELECT " + col_stock_id
                                 + ", SUM(  " + col_qty + " ) " + col_qty
                                 + ", " + col_unit
                                 + " FROM " + tbl_composite_links
@@ -908,21 +922,29 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + ", " + col_unit
                                 ;
 
-        String query_sub1000 = "SELECT " + col_stock_id
+        String query_sub1000itemvar = "SELECT " + col_stock_id
                                 + ", SUM( " + col_qty + " ) " + col_qty
                                 + ", "  + col_unit
-                                + " FROM ( " + query_sub0 + " UNION ALL " + query_sub100 + " ) "
+                                + " FROM ( " + query_sub0item + " UNION ALL " + query_sub100var + " ) "
                                 + " GROUP BY " + col_stock_id
                                 + ", " + col_unit
                                 ;
 
-        String query_sub101 = "SELECT (CASE WHEN a." + col_in_out + "= 'Out' THEN -a." + col_qty
+        String query_sub1000var = "SELECT " + col_stock_id
+                + ", SUM( " + col_qty + " ) " + col_qty
+                + ", "  + col_unit
+                + " FROM ( " + query_sub100var + " ) "
+                + " GROUP BY " + col_stock_id
+                + ", " + col_unit
+                ;
+
+        String query_sub101itemvar = "SELECT (CASE WHEN a." + col_in_out + "= 'Out' THEN -a." + col_qty
                                 + " ELSE a." + col_qty
                                 + " END) " + col_qty
                                 + ", a." + COL_MEASURE_USED + " " + col_unit
                                 + ", a." + col_stock_id
                                 + " FROM " + tbl_stocks_history + " a "
-                                + ", ( " + query_sub1000 + " ) b "
+                                + ", ( " + query_sub1000itemvar + " ) b "
                                 + " WHERE a." + col_stock_id + "= b." + col_stock_id
                                 + " union all "
                                 + " SELECT -b." + col_qty
@@ -957,17 +979,62 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + " WHERE b." + col_stock_id + " = aa." + col_stock_id
                                 + " AND aa." + col_item_id + " = " + item_id
                                 + " AND aa." + col_var_hdr_id + " is NULL ) "
+                                + " union all "
+                                + "SELECT 0 " + col_qty
+                                + ", c." + col_unit
+                                + ", c." + col_stock_id
+                                + " FROM ( " + query_sub0item + " UNION ALL " + query_sub100var + " ) c "
                                 ;
 
-        String query_sub102 = "SELECT SUM( aa." + col_qty + " ) " + col_qty
+        String query_sub101var = "SELECT (CASE WHEN a." + col_in_out + "= 'Out' THEN -a." + col_qty
+                + " ELSE a." + col_qty
+                + " END) " + col_qty
+                + ", a." + COL_MEASURE_USED + " " + col_unit
+                + ", a." + col_stock_id
+                + " FROM " + tbl_stocks_history + " a "
+                + ", ( " + query_sub1000var + " ) b "
+                + " WHERE a." + col_stock_id + "= b." + col_stock_id
+                + " union all "
+                + " SELECT -b." + col_qty
+                + ", b." + col_unit
+                + ", b." + col_stock_id
+                + " FROM " + tbl_sales + " a "
+                + ", " + tbl_composite_links + " b "
+                + " WHERE a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_completed + " IN ( 'W', 'N' )"
+                + " AND a." + col_var_hdr_id + " = b." + col_var_hdr_id
+                + " AND a." + col_var_dtls_id + " = b." + col_var_dtls_id
+                + " AND EXISTS ( SELECT 1 "
+                + " FROM " + tbl_composite_links + " aa "
+                + " WHERE b." + col_stock_id + " = aa." + col_stock_id
+                + " AND aa." + col_item_id + " = " + item_id
+                + " AND aa." + col_var_hdr_id + " = " + var_hdr_id
+                + " AND aa." + col_var_dtls_id + " = " + helperItem.getItem_id()
+                + " ) "
+                + " union all "
+                + "SELECT 0 " + col_qty
+                + ", c." + col_unit
+                + ", c." + col_stock_id
+                + " FROM ( " + query_sub100var + " ) c "
+                ;
+
+        String query_sub102itemvar = "SELECT SUM( aa." + col_qty + " ) " + col_qty
                                 + ", aa." + col_unit
                                 + ", aa." + col_stock_id
-                                + " FROM (" + query_sub101 + " ) aa "
+                                + " FROM (" + query_sub101itemvar + " ) aa "
                                 + " GROUP BY aa." + col_stock_id
                                 + ", aa." + col_unit
                                 ;
 
-        String query_sub31 = "SELECT "
+        String query_sub102var = "SELECT SUM( aa." + col_qty + " ) " + col_qty
+                + ", aa." + col_unit
+                + ", aa." + col_stock_id
+                + " FROM (" + query_sub101var + " ) aa "
+                + " GROUP BY aa." + col_stock_id
+                + ", aa." + col_unit
+                ;
+
+        String query_sub31item = "SELECT "
                                 + "(CASE WHEN x." + col_qty + "=0 THEN 1 ELSE x." + col_qty + " END) AS " + col_qty
                                 //+ col_qty
                                 + " FROM " + tbl_composite_links + " x "
@@ -976,7 +1043,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + " AND x." + col_stock_id + " = ww." + col_stock_id
                                 ;
 
-        String query_sub131 = "SELECT "
+        String query_sub131var = "SELECT "
                                 ///+ "(CASE WHEN x." + col_qty + "=0 THEN 1 ELSE x." + col_qty + " END) AS " + col_qty
                                 + col_qty
                                 + " FROM " + tbl_composite_links + " x "
@@ -986,25 +1053,38 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + " AND x." + col_stock_id + " = ww." + col_stock_id
                                 ;
 
-        String query_1031 = "SELECT SUM(" + col_qty + " ) " + col_qty
-                                + " FROM (" + query_sub31 + " UNION ALL " + query_sub131 + " ) ";
+        String query_1031itemvar = "SELECT SUM(" + col_qty + " ) " + col_qty
+                                + " FROM (" + query_sub31item + " UNION ALL " + query_sub131var + " ) ";
 
-        String query_sub103 = "SELECT ww." + col_qty
+        String query_1031var = "SELECT SUM(" + col_qty + " ) " + col_qty
+                + " FROM (" + query_sub131var + " ) ";
+
+        String query_sub103itemvar = "SELECT ww." + col_qty
                                 + " / "
-                                + " ( " + query_1031 + " ) " + col_qty
-                                + " FROM ( " + query_sub102 + " ) ww "
+                                + " ( " + query_1031itemvar + " ) " + col_qty
+                                + " FROM ( " + query_sub102itemvar + " ) ww "
                                 ;
 
-        String query_sub104 = "SELECT MIN(uu." + col_qty + ")" + col_qty
-                                + " FROM (" + query_sub103 + " ) uu"
+        String query_sub103var = "SELECT ww." + col_qty
+                + " / "
+                + " ( " + query_1031var + " ) " + col_qty
+                + " FROM ( " + query_sub102var + " ) ww "
+                ;
+
+        String query_sub104itemvar = "SELECT MIN( uu." + col_qty + " )" + col_qty
+                                + " FROM (" + query_sub103itemvar + " ) uu"
                                 ;
 
-        Log.d("stocksOkRemainingOrders", query_sub104);
+        String query_sub104var = "SELECT MIN( uu." + col_qty + " )" + col_qty
+                + " FROM (" + query_sub103var + " ) uu"
+                ;
+
+        Log.d("stocksOkRemainingOrderv", query_sub104itemvar);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         //Cursor cursor = db.rawQuery(query, null);
-        Cursor cursor = db.rawQuery(query_sub104, null);
+        Cursor cursor = db.rawQuery(query_sub104itemvar, null);
 
         if (cursor.moveToFirst()) {
             //do {
@@ -1019,6 +1099,211 @@ public class HelperDatabase extends SQLiteOpenHelper {
         db.close();
         return 0;
     }
+
+    public int stocksAvailableVarOnly(HelperItem helperItem, String item_id, String var_hdr_id){
+        //display only the minimum possible order
+
+        //REMAINING ORDERS query
+
+        String query_sub0item = "SELECT " + col_stock_id
+                + ", SUM(  " + col_qty + " ) " + col_qty
+                + ", " + col_unit
+                + " FROM " + tbl_composite_links
+                + " WHERE " + col_item_id  + " =  " + item_id
+                + " AND " + col_var_hdr_id + " IS NULL "
+                + " GROUP BY " + col_stock_id
+                + ", " + col_unit
+                ;
+
+        String query_sub100var = "SELECT " + col_stock_id
+                + ", SUM(  " + col_qty + " ) " + col_qty
+                + ", " + col_unit
+                + " FROM " + tbl_composite_links
+                + " WHERE " + col_item_id  + " =  " + item_id
+                + " AND " + col_var_hdr_id + " = " + var_hdr_id
+                + " AND " + col_var_dtls_id + " = " + helperItem.getItem_id()
+                + " GROUP BY " + col_stock_id
+                + ", " + col_unit
+                ;
+
+        String query_sub1000itemvar = "SELECT " + col_stock_id
+                + ", SUM( " + col_qty + " ) " + col_qty
+                + ", "  + col_unit
+                + " FROM ( " + query_sub0item + " UNION ALL " + query_sub100var + " ) "
+                + " GROUP BY " + col_stock_id
+                + ", " + col_unit
+                ;
+
+        String query_sub1000var = "SELECT " + col_stock_id
+                + ", SUM( " + col_qty + " ) " + col_qty
+                + ", "  + col_unit
+                + " FROM ( " + query_sub100var + " ) "
+                + " GROUP BY " + col_stock_id
+                + ", " + col_unit
+                ;
+
+        String query_sub101itemvar = "SELECT (CASE WHEN a." + col_in_out + "= 'Out' THEN -a." + col_qty
+                + " ELSE a." + col_qty
+                + " END) " + col_qty
+                + ", a." + COL_MEASURE_USED + " " + col_unit
+                + ", a." + col_stock_id
+                + " FROM " + tbl_stocks_history + " a "
+                + ", ( " + query_sub1000itemvar + " ) b "
+                + " WHERE a." + col_stock_id + "= b." + col_stock_id
+                + " union all "
+                + " SELECT -b." + col_qty
+                + ", b." + col_unit
+                + ", b." + col_stock_id
+                + " FROM " + tbl_sales + " a "
+                + ", " + tbl_composite_links + " b "
+                + " WHERE a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_completed + " IN ( 'W', 'N' )"
+                + " AND a." + col_var_hdr_id + " = b." + col_var_hdr_id
+                + " AND a." + col_var_dtls_id + " = b." + col_var_dtls_id
+                + " AND EXISTS ( SELECT 1 "
+                + " FROM " + tbl_composite_links + " aa "
+                + " WHERE b." + col_stock_id + " = aa." + col_stock_id
+                + " AND aa." + col_item_id + " = " + item_id
+                + " AND aa." + col_var_hdr_id + " = " + var_hdr_id
+                + " AND aa." + col_var_dtls_id + " = " + helperItem.getItem_id()
+                + " ) "
+                + " union all "
+                + " SELECT -b." + col_qty
+                + ", b." + col_unit
+                + ", b." + col_stock_id
+                + " FROM " + tbl_sales + " a "
+                + ", " + tbl_composite_links + " b "
+                + " WHERE 1=1 "
+                + " AND a." + col_completed + " IN ( 'W', 'N' )"
+                + " AND a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_var_hdr_id + " is NULL "
+                + " AND b." + col_var_hdr_id + " is NULL "
+                + " AND EXISTS ( SELECT 1 "
+                + " FROM " + tbl_composite_links + " aa "
+                + " WHERE b." + col_stock_id + " = aa." + col_stock_id
+                + " AND aa." + col_item_id + " = " + item_id
+                + " AND aa." + col_var_hdr_id + " is NULL ) "
+                + " union all "
+                + "SELECT 0 " + col_qty
+                + ", c." + col_unit
+                + ", c." + col_stock_id
+                + " FROM ( " + query_sub0item + " UNION ALL " + query_sub100var + " ) c "
+                ;
+
+        String query_sub101var = "SELECT (CASE WHEN a." + col_in_out + "= 'Out' THEN -a." + col_qty
+                + " ELSE a." + col_qty
+                + " END) " + col_qty
+                + ", a." + COL_MEASURE_USED + " " + col_unit
+                + ", a." + col_stock_id
+                + " FROM " + tbl_stocks_history + " a "
+                + ", ( " + query_sub1000var + " ) b "
+                + " WHERE a." + col_stock_id + "= b." + col_stock_id
+                + " union all "
+                + " SELECT -b." + col_qty
+                + ", b." + col_unit
+                + ", b." + col_stock_id
+                + " FROM " + tbl_sales + " a "
+                + ", " + tbl_composite_links + " b "
+                + " WHERE a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_completed + " IN ( 'W', 'N' )"
+                + " AND a." + col_var_hdr_id + " = b." + col_var_hdr_id
+                + " AND a." + col_var_dtls_id + " = b." + col_var_dtls_id
+                + " AND EXISTS ( SELECT 1 "
+                + " FROM " + tbl_composite_links + " aa "
+                + " WHERE b." + col_stock_id + " = aa." + col_stock_id
+                + " AND aa." + col_item_id + " = " + item_id
+                + " AND aa." + col_var_hdr_id + " = " + var_hdr_id
+                + " AND aa." + col_var_dtls_id + " = " + helperItem.getItem_id()
+                + " ) "
+                + " union all "
+                + "SELECT 0 " + col_qty
+                + ", c." + col_unit
+                + ", c." + col_stock_id
+                + " FROM ( " + query_sub100var + " ) c "
+                ;
+
+        String query_sub102itemvar = "SELECT SUM( aa." + col_qty + " ) " + col_qty
+                + ", aa." + col_unit
+                + ", aa." + col_stock_id
+                + " FROM (" + query_sub101itemvar + " ) aa "
+                + " GROUP BY aa." + col_stock_id
+                + ", aa." + col_unit
+                ;
+
+        String query_sub102var = "SELECT SUM( aa." + col_qty + " ) " + col_qty
+                + ", aa." + col_unit
+                + ", aa." + col_stock_id
+                + " FROM (" + query_sub101var + " ) aa "
+                + " GROUP BY aa." + col_stock_id
+                + ", aa." + col_unit
+                ;
+
+        String query_sub31item = "SELECT "
+                + "(CASE WHEN x." + col_qty + "=0 THEN 1 ELSE x." + col_qty + " END) AS " + col_qty
+                //+ col_qty
+                + " FROM " + tbl_composite_links + " x "
+                + " WHERE x." + col_item_id + " = " + item_id
+                + " AND x." + col_var_hdr_id + " is null "
+                + " AND x." + col_stock_id + " = ww." + col_stock_id
+                ;
+
+        String query_sub131var = "SELECT "
+                ///+ "(CASE WHEN x." + col_qty + "=0 THEN 1 ELSE x." + col_qty + " END) AS " + col_qty
+                + col_qty
+                + " FROM " + tbl_composite_links + " x "
+                + " WHERE x." + col_item_id + " = " + item_id
+                + " AND x." + col_var_hdr_id + " = " + var_hdr_id
+                + " AND x." + col_var_dtls_id + " = " + helperItem.getItem_id()
+                + " AND x." + col_stock_id + " = ww." + col_stock_id
+                ;
+
+        String query_1031itemvar = "SELECT SUM(" + col_qty + " ) " + col_qty
+                + " FROM (" + query_sub31item + " UNION ALL " + query_sub131var + " ) ";
+
+        String query_1031var = "SELECT SUM(" + col_qty + " ) " + col_qty
+                + " FROM (" + query_sub131var + " ) ";
+
+        String query_sub103itemvar = "SELECT ww." + col_qty
+                + " / "
+                + " ( " + query_1031itemvar + " ) " + col_qty
+                + " FROM ( " + query_sub102itemvar + " ) ww "
+                ;
+
+        String query_sub103var = "SELECT ww." + col_qty
+                + " / "
+                + " ( " + query_1031var + " ) " + col_qty
+                + " FROM ( " + query_sub102var + " ) ww "
+                ;
+
+        String query_sub104itemvar = "SELECT MIN( uu." + col_qty + " )" + col_qty
+                + " FROM (" + query_sub103itemvar + " ) uu"
+                ;
+
+        String query_sub104var = "SELECT MIN( uu." + col_qty + " )" + col_qty
+                + " FROM (" + query_sub103var + " ) uu"
+                ;
+
+        Log.d("stocksOkRemainingOrderv", query_sub104itemvar);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query_sub104var, null);
+
+        if (cursor.moveToFirst()) {
+            //do {
+            if (cursor.getString(0)==null){
+                return 0;
+            } else {
+                return cursor.getInt(0);
+            }
+
+            //} while (cursor.moveToNext());
+        }
+        db.close();
+        return 0;
+    }
+
 
 
     public List<String> listOfStocks(HelperItem helperItem){
@@ -1061,6 +1346,13 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " WHERE b." + col_stock_id + " = aa." + col_stock_id
                 + " AND aa." + col_item_id + " = " + helperItem.getItem_id()
                 + " AND aa." + col_var_hdr_id + " is NULL ) "
+                + " union all "
+                + "SELECT 0 " + col_qty
+                + ", c." + col_unit
+                + ", c." + col_stock_id
+                + " FROM " + tbl_composite_links + " c "
+                + " WHERE c." + col_item_id  + " =  " + helperItem.getItem_id()
+                + " AND c." + col_var_hdr_id + " IS NULL "
                 ;
 
         String query_sub2 = "SELECT SUM( aa." + col_qty + " ) " + col_qty
@@ -1098,7 +1390,8 @@ public class HelperDatabase extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query_sub3, null);
         if (cursor.moveToFirst()) {
             do {
-                stockName = cursor.getString(0) + " order(s) rem. - " + cursor.getString(1) + " " + cursor.getString(2) + " " + cursor.getString(3) + " current stocks";
+                stockName = String.format("% 3d", Integer.parseInt(cursor.getString(0))) + " order rem. - " + cursor.getString(1) + " (" + cursor.getString(2) + ") " + cursor.getString(3) + " avl";
+
                 if(stockName!=null){
                     listStockNames.add(stockName);
                 }
@@ -1152,6 +1445,14 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " AND aa." + col_var_hdr_id + " = " +  var_hdr_id
                 + " AND aa." + col_var_dtls_id + " = " + helperItem.getItem_id()
                 + " ) "
+                + " union all "
+                + "SELECT 0 " + col_qty
+                + ", c." + col_unit
+                + ", c." + col_stock_id
+                + " FROM " + tbl_composite_links + " c "
+                + " WHERE c." + col_item_id  + " =  " + item_id
+                + " AND c." + col_var_hdr_id + " = " + var_hdr_id
+                + " AND c." + col_var_dtls_id + " = " + helperItem.getItem_id()
                 ;
 
         String query_sub2 = "SELECT SUM( aa." + col_qty + " ) " + col_qty
@@ -1191,7 +1492,8 @@ public class HelperDatabase extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query_sub3, null);
         if (cursor.moveToFirst()) {
             do {
-                stockName = cursor.getString(0) + " order(s) rem. - " + cursor.getString(1) + " " + cursor.getString(2) + " " + cursor.getString(3) + " current stocks";
+                stockName = String.format("% 3d", Integer.parseInt(cursor.getString(0))) + " order rem. - " + cursor.getString(1) + " (" + cursor.getString(2) + ") " + cursor.getString(3) + " avl";
+
                 if(stockName!=null){
                     listStockNames.add(stockName);
                 }
@@ -1396,7 +1698,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
-                Log.d("listOutOfStocks", "cursor1=" + cursor.getInt(0) + " cursor2=" + cursor.getInt(1) + " curosr3=" + cursor.getString(2));
+                Log.d("listOutOfStocks", "cursor1=" + cursor.getInt(0) + " cursor2=" + cursor.getInt(1) + " cursor3=" + cursor.getString(2));
                 stockName = outOfStockName(cursor.getInt(0), db, cursor.getInt(1), cursor.getString(2));
                 if(stockName!=null){
                     listOutStockNames.add(stockName);
@@ -1475,12 +1777,15 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     public int priceInItemMenu(HelperItem helperItem){
-        String query = "SELECT MAX(a." + col_var_selling_price
-                + ") "
+        String query = "SELECT MAX(CAST(a." + col_var_selling_price
+                + " as INT)) "
                 + " FROM " + tbl_variants_dtls + " a, " + tbl_variants_links + " b "
                 + " WHERE a." + col_var_hdr_id + " = b." + col_var_hdr_id
                 + " AND b." + col_item_id + " = " + helperItem.getItem_id();
                 ;
+
+        Log.d("priceInItemMenu", query);
+
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -2065,6 +2370,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
             contentValues.put(col_var_selling_price, helperVariantsDtls.get(i).getVar_selling_price());
             contentValues.put(col_var_dtls_default, helperVariantsDtls.get(i).getVar_dtls_default());
             contentValues.put(col_var_dtls_add_on, helperVariantsDtls.get(i).getVar_dtls_add_on());
+            contentValues.put(col_composite_required, helperVariantsDtls.get(i).getComposite_required());
             long result = db.insert(tbl_variants_dtls, null, contentValues);
             if (result == -1) {
                 Log.d("refreshVariantsDtls", "failed insert");
@@ -2103,6 +2409,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperVariantsDtl.setVar_selling_price(cursor.getString(4));
                 helperVariantsDtl.setVar_dtls_default(cursor.getString(5));
                 helperVariantsDtl.setVar_dtls_add_on(cursor.getString(6));
+                helperVariantsDtl.setComposite_required(cursor.getString(7));
                 helperVariantsDtls.add(helperVariantsDtl);
             } while (cursor.moveToNext());
         }
@@ -2132,6 +2439,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperVariantsDtl.setVar_selling_price(cursor.getString(4));
                 helperVariantsDtl.setVar_dtls_default(cursor.getString(5));
                 helperVariantsDtl.setVar_dtls_add_on(cursor.getString(6));
+                helperVariantsDtl.setComposite_required(cursor.getString(7));
                 helperVariantsDtls.add(helperVariantsDtl);
             } while (cursor.moveToNext());
         }
@@ -2171,6 +2479,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperVariantsDtl.setVar_selling_price(cursor.getString(4));
                 helperVariantsDtl.setVar_dtls_default(cursor.getString(5));
                 helperVariantsDtl.setVar_dtls_add_on(cursor.getString(6));
+                helperVariantsDtl.setComposite_required(cursor.getString(7));
                 helperVariantsDtls.add(helperVariantsDtl);
             } while (cursor.moveToNext());
         }
@@ -2183,19 +2492,45 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
     //SALES start
     //Cannot delete completed sales
-    public void refreshSales(List<HelperSales> helperSales){
+    public void refreshSales(List<HelperSales> listHelperSales){
 
         deleteSales();
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        for (int i=0; i < helperSales.size(); i++){
-            contentValues.put(col_item_id, helperSales.get(i).getItem_id());
-            db.insert(tbl_sales, null, contentValues);
+        for (int i=0; i < listHelperSales.size(); i++) {
+
+            Log.d("refreshSales", "Processing...");
+
+
+            contentValues.put(col_transaction_id, listHelperSales.get(i).getTransaction_id());
+            contentValues.put(col_transaction_counter, listHelperSales.get(i).getTransaction_counter());
+            contentValues.put(col_transaction_per_entry, listHelperSales.get(i).getTransaction_per_entry());
+            contentValues.put(col_item_id, listHelperSales.get(i).getItem_id());
+            contentValues.put(col_sort_order_id, listHelperSales.get(i).getSort_order_id());
+            contentValues.put(col_machine_name, listHelperSales.get(i).getMachine_name());
+            contentValues.put(col_var_hdr_id, listHelperSales.get(i).getVar_dtls_id());
+            contentValues.put(col_var_dtls_id, listHelperSales.get(i).getVar_dtls_id());
+            contentValues.put(col_item_name, listHelperSales.get(i).getItem_name());
+            contentValues.put(col_qty, listHelperSales.get(i).getQty());
+            contentValues.put(col_selling_price, listHelperSales.get(i).getSelling_price());
+            contentValues.put(col_date, listHelperSales.get(i).getDate());
+            contentValues.put(col_created_by, listHelperSales.get(i).getCreated_by());
+            contentValues.put(col_completed, listHelperSales.get(i).getCompleted());
+            contentValues.put(col_dine_in_out, listHelperSales.get(i).getDine_in_out());
+
+            long result = db.insert(tbl_sales, null, contentValues);
+            if (result == -1) {
+                Log.d("refreshSales", "failed sales refresh");
+            } else {
+                Log.d("refreshSales", "success sales refresh");
+            }
         }
 
         db.close();
+
+
 
     }
 
@@ -2869,7 +3204,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     public int nextSortOrderIdNoItem(HelperSales helperSale){
-        String query = "SELECT MAX(" + col_sort_order_id + ") + " + sale_sorter + " FROM " + tbl_sales
+        String query = "SELECT MAX(" + col_sort_order_id + " ) + " + sale_sorter + " FROM " + tbl_sales
                 + " WHERE " + col_sort_order_id + " % " + sale_sorter + " = 0"
                 + " AND " + col_transaction_per_entry + " = '" + helperSale.getTransaction_per_entry() + "'"
                 + " AND " + col_machine_name + " = '" + helperSale.getMachine_name() + "'"
@@ -2890,7 +3225,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     public int getSortOrderIdItem(HelperSales helperSale){
-        String query = "SELECT MAX(" + col_sort_order_id + ") FROM " + tbl_sales
+        String query = "SELECT MAX(" + col_sort_order_id + " ) FROM " + tbl_sales
                 + " WHERE " + col_sort_order_id + " % " + sale_sorter + " = 0"
                 + " AND " + col_transaction_per_entry + " = '" + helperSale.getTransaction_per_entry() + "'"
                 + " AND " + col_item_id + " = '" + helperSale.getItem_id() + "'"
@@ -2934,7 +3269,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     public int maxTransactionId(){
-        String query = "SELECT MAX(" + col_transaction_id + ") FROM " + tbl_sales;
+        String query = "SELECT MAX(" + col_transaction_id + " ) FROM " + tbl_sales;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         int id = 0;
@@ -2949,7 +3284,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     public int maxTransactionPerEntry(){
-        String query = "SELECT MAX(" + col_transaction_per_entry + ") FROM " + tbl_sales;
+        String query = "SELECT MAX(" + col_transaction_per_entry + " ) FROM " + tbl_sales;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         int id = 0;
@@ -2966,7 +3301,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
     public int maxTransactionPerEntryCompN(HelperSales helperSale){
 
-        String query = "SELECT MAX(" + col_transaction_per_entry + ") FROM " + tbl_sales
+        String query = "SELECT MAX(" + col_transaction_per_entry + " ) FROM " + tbl_sales
                 + " WHERE " + col_created_by + " = '" + helperSale.getCreated_by() + "' "
                 + " AND " + col_item_id + " = '" + helperSale.getItem_id() + "' "
                 + " AND " + col_machine_name + " = '" + helperSale.getMachine_name() + "' "
@@ -2987,7 +3322,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     public int nextTransactionCounter(){
-        String query = "SELECT MAX(" + col_transaction_counter + ") + 1 FROM " + tbl_sales
+        String query = "SELECT MAX(" + col_transaction_counter + " ) + 1 FROM " + tbl_sales
                 + " WHERE " + col_completed + " = 'Y'"
                 ;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -3013,7 +3348,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
         //                  2 reg fries cheese
         //                  1 pizza
 
-        String query = "SELECT MAX(" + col_transaction_per_entry + ") + 1 FROM " + tbl_sales
+        String query = "SELECT MAX(" + col_transaction_per_entry + " ) + 1 FROM " + tbl_sales
                 + " WHERE " + col_completed + " = 'N'"
                 ;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -3059,7 +3394,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         int int_add = addToMaxSortOrderIdVariant(helperSale);
 
-        String query = "SELECT MAX(" + col_sort_order_id + ") + " + int_add + " FROM " + tbl_sales
+        String query = "SELECT MAX(" + col_sort_order_id + " ) + " + int_add + " FROM " + tbl_sales
                 + " WHERE " + col_transaction_per_entry + " = '" + helperSale.getTransaction_per_entry() + "'"
                 + " AND " + col_item_id + " = '" + helperSale.getItem_id() + "'"
                 + " AND " + col_machine_name + " = '" + helperSale.getMachine_name() + "'"
@@ -3347,7 +3682,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + ", " + col_completed
                 + ", " + col_var_dtls_id
                 + " ORDER BY "
-                + col_transaction_per_entry  + " DESC " + ", "
+                + col_transaction_per_entry  + " DESC " + ",  "
                 + col_sort_order_id  + " DESC ";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -3434,7 +3769,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + ", " + col_transaction_per_entry
                 + ", " + col_completed
                 + ", " + col_sort_order_id
-                + " ORDER BY " + col_sort_order_id;
+                + " ORDER BY " + col_sort_order_id + " ";
 
         String query_all = "SELECT sum(" + col_qty + ") AS " + col_qty
                 + ", sum(" + col_selling_price + ")  AS " + col_selling_price
@@ -3556,7 +3891,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + ", " + col_transaction_per_entry
                 + ", " + col_completed
                 + ", " + col_sort_order_id
-                + " ORDER BY " + col_sort_order_id;
+                + " ORDER BY " + col_sort_order_id + " ";
 
         String query_all = "SELECT sum(" + col_qty + ") AS " + col_qty
                 + ", sum(" + col_selling_price + ")  AS " + col_selling_price
@@ -3762,7 +4097,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                                 + " CASE "
                                 + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
                                 + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
-                                + " END  " + " >= " + " (SELECT DATETIME('now', '-91 day'))"
+                                + " END  " + " >= " + " (SELECT DATETIME('now', '-" + days_covered + " day'))"
                 + " GROUP BY " + col_date
                 + " ORDER BY 2 "
                 ;
@@ -3854,7 +4189,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
                 + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
-                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-" + days_covered + " day'))"
                 + " GROUP BY " + col_time
                 + " ORDER BY 2 "
                 ;
@@ -4015,7 +4350,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " CASE "
                 + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
                 + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
-                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-" + days_covered + " day'))"
                 + " GROUP BY " + col_date
                 //+ " ORDER BY 2 "
                 ;
@@ -4074,7 +4409,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
                 + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
-                + " END  " + " >= " + " (SELECT DATETIME('now', '-31 day'))"
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-" + days_covered + " day'))"
                 + " GROUP BY " + col_time
                 //+ " ORDER BY 2 "
                 ;
@@ -4167,6 +4502,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
             contentValues.put(col_variants_dtls, helperChanges.get(i).getVariants_dtls());
             contentValues.put(col_composite_links, helperChanges.get(i).getComposite_links());
             contentValues.put(col_stock_histories, helperChanges.get(i).getStock_histories());
+            contentValues.put(col_sales, helperChanges.get(i).getSales());
 
             long result = db.insert(tbl_changes, null, contentValues);
             if (result == -1) {
@@ -4330,6 +4666,22 @@ public class HelperDatabase extends SQLiteOpenHelper {
         return false;
     }
 
+    public boolean dbChangedSales(){
+        String query = "SELECT * FROM " + tbl_changes + " WHERE " + col_sales + " = 'Y'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            db.close();
+            Log.d("Record Already Exists", query);
+            return true;
+        }
+        Log.d("New Record  ", query);
+        db.close();
+
+        return false;
+    }
+
     //CHANGES end
 
     //COMPOSITE_LINKS start
@@ -4348,6 +4700,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
             contentValues.put(col_var_dtls_id, helperCompositeLinks.get(i).getVar_dtls_id());
             contentValues.put(col_qty, helperCompositeLinks.get(i).getQty());
             contentValues.put(col_unit, helperCompositeLinks.get(i).getUnit());
+            contentValues.put(col_req, helperCompositeLinks.get(i).getReq());
 
             Log.d("refreshCompositeLinks", helperCompositeLinks.get(i).getItem_id() + " --- " + helperCompositeLinks.get(i).getStock_id() +  " >>>> " + helperCompositeLinks.get(i).getVar_hdr_id() );
 
@@ -4389,6 +4742,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperCompositeLink.setVar_dtls_id(cursor.getString(4));
                 helperCompositeLink.setQty(cursor.getString(5));
                 helperCompositeLink.setUnit(cursor.getString(6));
+                helperCompositeLink.setReq(cursor.getString(7));
                 helperCompositeLinks.add(helperCompositeLink);
             } while (cursor.moveToNext());
         }
@@ -4420,6 +4774,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperCompositeLink.setVar_dtls_id(cursor.getString(4));
                 helperCompositeLink.setQty(cursor.getString(5));
                 helperCompositeLink.setUnit(cursor.getString(6));
+                helperCompositeLink.setReq(cursor.getString(7));
                 helperCompositeLinks.add(helperCompositeLink);
             } while (cursor.moveToNext());
         }
@@ -4450,6 +4805,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperCompositeLink.setVar_dtls_id(cursor.getString(4));
                 helperCompositeLink.setQty(cursor.getString(5));
                 helperCompositeLink.setUnit(cursor.getString(6));
+                helperCompositeLink.setReq(cursor.getString(7));
                 helperCompositeLinks.add(helperCompositeLink);
             } while (cursor.moveToNext());
         }
