@@ -413,6 +413,37 @@ public class PostLoginActivity extends AppCompatActivity {
                         helperDatabase.refreshSales(helperSales);
                         ChangesFB changesFB = new ChangesFB();
                         changesFB.NoChangesSales();
+                        downloadFPDtls();
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            downloadFPDtls();
+        }
+
+    }
+
+    public void downloadFPDtls(){
+        if(helperDatabase.dbChangedFPDtls()){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("fp_dtls");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()){
+                        List<HelperFPDtls> helperFPDtls = new ArrayList<>();
+                        helperFPDtls.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            helperFPDtls.add(snapshot.getValue(HelperFPDtls.class));
+                        }
+                        helperDatabase.refreshFPDtls(helperFPDtls);
+                        ChangesFB changesFB = new ChangesFB();
+                        changesFB.NoChangesFPDtls();
                         openMainMenuActivity();
                     }
                     progressBar.setVisibility(View.GONE);

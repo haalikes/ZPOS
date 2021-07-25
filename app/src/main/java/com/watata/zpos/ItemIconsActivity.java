@@ -66,6 +66,21 @@ public class ItemIconsActivity extends AppCompatActivity {
         iconList.add("zczach");
         iconList.add("ZC Effect");
 
+        iconList.add("streetvendo");
+        iconList.add("Street Foods");
+        iconList.add("friednoodles");
+        iconList.add("Fried Noodles");
+        iconList.add("squidballs");
+        iconList.add("Squid Balls");
+        iconList.add("chickenballs");
+        iconList.add("Chicken Balls");
+        iconList.add("fishballs");
+        iconList.add("Fish Balls");
+        iconList.add("dumpling");
+        iconList.add("Dumplings");
+        iconList.add("cheesesticks");
+        iconList.add("Cheese Sticks");
+
         iconList.add("foodpanda");
         iconList.add("Food Panda");
 

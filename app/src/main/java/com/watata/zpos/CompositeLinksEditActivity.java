@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -41,7 +42,7 @@ import java.util.List;
 public class CompositeLinksEditActivity extends AppCompatActivity {
 
     int item_id;
-    String item_name, itemReq;
+    String item_name;
     float scale;
     Button addBtn, backBtn;
     Spinner spinner, spinnerStockNamesForVar, sItemUnit;
@@ -104,7 +105,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
         llVariantsSpinner = findViewById(R.id.llVariantsSpinner);
         spinnerStockNamesForVar = findViewById(R.id.spinnerStockNamesForVar);
         cbItemReq = findViewById(R.id.cbItemReq);
-        itemReq = "Y";
+        cbItemReq.setChecked(true);
 
         tvThisPage.setText("Composite of " + item_name);
 
@@ -125,7 +126,9 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
                 helperCompositeLink.setQty(item_qty.getText().toString());
                 //helperCompositeLink.setUnit(item_unit.getText().toString());
                 helperCompositeLink.setUnit(sItemUnit.getSelectedItem().toString());
-                if (itemReq=="Y") helperCompositeLink.setReq(itemReq);
+                if (!cbItemReq.isChecked()){
+                    helperCompositeLink.setReq("N");
+                }
                 if (inc_by_var.isChecked()){
                     helperCompositeLink.setInc_by_var("Y");
                 }
@@ -169,11 +172,6 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
         cbItemReq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (cbItemReq.isChecked()){
-                    itemReq = "Y";
-                } else {
-                    itemReq = "";
-                }
             }
         });
 
@@ -432,7 +430,13 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
             param = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 2);
             tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getQty()), param);
             tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getUnit()), param);
-            tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getReq()), param);
+            Log.d("populateCompositeLinks", "getReq=" + listHelperCompositeLinks.get(row).getReq());
+            if (listHelperCompositeLinks.get(row).getReq() != null){
+                tableRow.addView(createTextViewTable(listHelperCompositeLinks.get(row).getReq()), param);
+            } else {
+                tableRow.addView(createTextViewTable("Y"), param);
+            }
+
         }
 
 
@@ -565,7 +569,7 @@ public class CompositeLinksEditActivity extends AppCompatActivity {
 
                 helperCompositeLink.setQty(etQty.getText().toString());
                 helperCompositeLink.setUnit(etUnit.getText().toString());
-                if (cbReq.isChecked()) helperCompositeLink.setReq("Y");
+                if (!cbReq.isChecked()) helperCompositeLink.setReq("N");
                 addCompositeLinks(helperCompositeLink);
 
             }

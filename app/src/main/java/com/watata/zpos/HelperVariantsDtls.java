@@ -7,6 +7,9 @@ public class HelperVariantsDtls implements Serializable {
     private int var_hdr_id, var_dtls_id;
     private String var_dtls_image, var_dtls_name, var_selling_price, var_dtls_default, var_dtls_add_on, composite_required;
 
+    //var_hdr_id is fk, can be multiple
+    //var_dtls_id is unique
+
     public HelperVariantsDtls() {
     }
 

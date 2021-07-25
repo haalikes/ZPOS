@@ -1,12 +1,12 @@
 package com.watata.zpos;
 
 public class HelperChanges {
-    private String change_all, stock_names, category, items, variants_links, variants_hdr, variants_dtls, composite_links, stock_histories, sales ;
+    private String change_all, stock_names, category, items, variants_links, variants_hdr, variants_dtls, composite_links, stock_histories, sales, fp_dtls ;
 
     public HelperChanges() {
     }
 
-    public HelperChanges(String change_all, String stock_names, String category, String items, String variants_links, String variants_hdr, String variants_dtls, String composite_links, String stock_histories, String sales) {
+    public HelperChanges(String change_all, String stock_names, String category, String items, String variants_links, String variants_hdr, String variants_dtls, String composite_links, String stock_histories, String sales, String fp_dtls) {
         this.change_all = change_all;
         this.stock_names = stock_names;
         this.category = category;
@@ -17,6 +17,7 @@ public class HelperChanges {
         this.composite_links = composite_links;
         this.stock_histories = stock_histories;
         this.sales = sales;
+        this.fp_dtls = fp_dtls;
     }
 
     public String getChange_all() {
@@ -98,5 +99,14 @@ public class HelperChanges {
 
     public void setSales(String sales) {
         this.sales = sales;
+    }
+
+
+    public String getFp_dtls() {
+        return fp_dtls;
+    }
+
+    public void setFp_dtls(String fp_dtls) {
+        this.fp_dtls = fp_dtls;
     }
 }

@@ -135,7 +135,7 @@ public class ItemAddActivity extends AppCompatActivity {
     }
 
     public void openVariantsLinkEditActivity() {
-        Intent intent = new Intent(this, VariantsLinksEditActivity.class);
+        Intent intent = new Intent(this, VariantsLinksAddActivity.class);
         intent.putExtra("item_id", item_id);
         startActivityForResult(intent, 2);
     }

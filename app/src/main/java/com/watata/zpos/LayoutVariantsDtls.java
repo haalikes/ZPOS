@@ -703,7 +703,7 @@ public class LayoutVariantsDtls {
                     //Start alert
                     AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                     if(stockNames==null || stockNames.equals("")){
-                        builder.setTitle("No Stocks Setup");
+                        builder.setTitle("No Stocks Setup - CLL01");
                         builder.setMessage("Please setup stocks for variant " + helperItem.getItem_name() );
                     } else {
                         builder.setTitle("Out of Stock - LVD03");
@@ -727,7 +727,7 @@ public class LayoutVariantsDtls {
             linearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (helperDatabase.stocksAvailableVarOnly(helperItem, "" + item_id, "" + var_hdr_id) <= 0 && !rb.isChecked() ) {
+                    if (helperDatabase.stocksAvailableVarOnly(helperItem, "" + item_id, "" + var_hdr_id) <= 0 && !rb.isChecked() && helperDatabase.compositeRequired(var_hdr_id, helperItem.getItem_id() ) ) {
                         linearLayout.setBackground(context.getResources().getDrawable(R.drawable.custom_ll_out_of_stock, context.getTheme()));
 
 
@@ -743,7 +743,7 @@ public class LayoutVariantsDtls {
                         //Start alert
                         AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                         if(stockNames==null || stockNames.equals("")){
-                            builder.setTitle("No Stocks Setup");
+                            builder.setTitle("No Stocks Setup - CLL01");
                             builder.setMessage("Please setup stocks for variant " + helperItem.getItem_name() );
                         } else {
                             builder.setTitle("Out of Stock - LVD04");

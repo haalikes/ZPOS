@@ -82,4 +82,12 @@ public class ChangesFB {
         reference.child("sales").setValue("N");
     }
 
+    public void ChangesFPDtls(){
+        reference.child("fp_dtls").setValue("Y");
+    }
+
+    public void NoChangesFPDtls(){
+        reference.child("fp_dtls").setValue("N");
+    }
+
 }

@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SalesAndStocksActivity"></activity>
+        <activity android:name=".FPDtlsActivity"></activity>
+        <activity android:name=".SalesAndStocksActivity" />
         <activity android:name=".StocksDayActivity" />
         <activity android:name=".SalesDayActivity" />
         <activity android:name=".PaidActivity" />
@@ -20,7 +21,7 @@
         <activity android:name=".VariantsMenuActivity" />
         <activity android:name=".ItemMenuActivity" />
         <activity android:name=".CategoryMenuActivity" />
-        <activity android:name=".VariantsLinksEditActivity" />
+        <activity android:name=".VariantsLinksAddActivity" />
         <activity android:name=".VariantsHdrIconsActivity" />
         <activity android:name=".VariantsHdrAddActivity" />
         <activity android:name=".VariantsDtlsIconsActivity" />

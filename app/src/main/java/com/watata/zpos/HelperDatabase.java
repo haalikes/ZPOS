@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import androidx.constraintlayout.solver.widgets.Helper;
-
 public class HelperDatabase extends SQLiteOpenHelper {
     private static final int sale_sorter = 100;
     private static final int days_covered = 120;
@@ -110,6 +108,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     private static final String col_composite_links = "composite_links";
     private static final String col_stock_histories = "stock_histories";
     private static final String col_sales = "sales";
+    private static final String col_fp_dtls = "fp_dtls";
 
 
 
@@ -128,9 +127,15 @@ public class HelperDatabase extends SQLiteOpenHelper {
     private static final String tbl_dine_in_out = "dine_in_out";
     //private static final String col_dine_in_out = "dine_in_out";
 
+    //fp details
+    private static final String tbl_fp_dtls = "fp_dtls";
+    private static final String col_fp_id = "fp_id";
+    private static final String col_fp_end_of_day_total = "fp_end_of_day_total";
+    private static final String col_fp_payment_advice = "fp_payment_advice";
+
 
     public HelperDatabase(Context context) {
-        super(context, DB_NAME, null, 67);
+        super(context, DB_NAME, null, 71);
     }
 
     @Override
@@ -230,6 +235,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                     + " ," + col_composite_links + " TEXT "
                     + " ," + col_stock_histories + " TEXT "
                     + " ," + col_sales +  " TEXT "
+                    + " ," + col_fp_dtls + " TEXT "
             + ")";
             db.execSQL(createTable);
 
@@ -247,6 +253,13 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
             //dine_in_out
             createTable = "CREATE TABLE " + tbl_dine_in_out + " ( " + col_dine_in_out + " TEXT "
+                    + ")";
+            db.execSQL(createTable);
+
+            //fp_dtls
+            createTable = "CREATE TABLE " + tbl_fp_dtls + " ( " + col_fp_id + " INTEGER "
+                    + " ," + col_fp_end_of_day_total + " TEXT "
+                    + " ," + col_fp_payment_advice + " TEXT "
                     + ")";
             db.execSQL(createTable);
 
@@ -272,6 +285,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + tbl_sales);
         db.execSQL("DROP TABLE IF EXISTS " + tbl_changes);
         db.execSQL("DROP TABLE IF EXISTS " + tbl_composite_links);
+        db.execSQL("DROP TABLE IF EXISTS " + tbl_fp_dtls);
         onCreate(db);
     }
 
@@ -367,6 +381,20 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         db.close();
         return measureUsed;
+    }
+
+    public String getItemName(String item_id){
+        String itemName = "";
+        String query = "SELECT " + col_item_name + " FROM " + tbl_items + " WHERE " + col_item_id + " = " + item_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            itemName = cursor.getString(0);
+        }
+
+        db.close();
+        return itemName;
     }
 
     public void deleteStockNames(){
@@ -2488,6 +2516,24 @@ public class HelperDatabase extends SQLiteOpenHelper {
         Log.d("listVariantsDtls", query);
         return helperVariantsDtls;
     }
+
+    public boolean compositeRequired(int var_hdr_id, int var_dtls_id){
+        String query = "SELECT * FROM " + tbl_variants_dtls
+                + " WHERE " + col_var_hdr_id + " = " + var_hdr_id + " "
+                + " AND " + col_var_dtls_id + " = " + var_dtls_id + " "
+                + " AND " + col_composite_required + " = 'N'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            db.close();
+            return false;
+        }
+        db.close();
+
+        return true;
+    }
+
     //VARIANTS_DTLS end
 
     //SALES start
@@ -2949,6 +2995,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperSale.setCompleted(cursor.getString(13));
                 if (cursor.getString(14)!=null)
                     helperSale.setDine_in_out(cursor.getString(14));
+                helperSale.setCompleted("Y"); //set completed, finishSale will be called
                 HelperSales.add(helperSale);
             } while (cursor.moveToNext());
         }
@@ -4049,7 +4096,8 @@ public class HelperDatabase extends SQLiteOpenHelper {
         helperSales.clear();
 
         String query = "SELECT sum(" + col_selling_price + ") AS " + col_selling_price
-                + ", (" + " CASE "
+                + ", ("
+                            + " CASE "
                             + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
                             + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
                             + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
@@ -4117,10 +4165,6 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 helperSale.setQty("" + row_num);
                 helperSales.add(helperSale);
                 row_num += 1;
-
-                //Log.d("listSummarySalesPerDay1", cursor.getString(0));
-                //Log.d("listSummarySalesPerDay2", cursor.getString(1));
-                //Log.d("listSummarySalesPerDay3", "" + row_num );
 
             } while (cursor.moveToNext());
         }
@@ -4250,14 +4294,11 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " END  "
                 + ")"
                 + " FROM " + tbl_stocks_history
-                + " WHERE " + col_username + " = 'admin'"
+                + " WHERE 1=1 "
+                ///+ col_username + " = 'admin'"
                 + " AND " + col_cost + " IS NOT NULL "
-                + " AND " + " CASE "
-                + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 9, 4 ) "
-                + " ELSE  SUBSTR( " + col_time + ", 8, 4) "
-                + " END "
-                + " || '-' || "
-                + " CASE "
+                + " AND "
+                + " (" + " CASE "
                 + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Jan' THEN '01' "
                 + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Feb' THEN '02' "
                 + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Mar' THEN '03' "
@@ -4272,11 +4313,13 @@ public class HelperDatabase extends SQLiteOpenHelper {
                 + " WHEN SUBSTR(" + col_time + ", 1, 3 ) = 'Dec' THEN '12' "
                 + " ELSE '01' "
                 + " END "
-                + " || '-' || "
+                + " || "
                 + " CASE "
                 + " WHEN LENGTH("+ col_time + ") = 12 THEN SUBSTR(" + col_time + ", 5, 2 ) "
                 + " ELSE  '0' || SUBSTR( " + col_time + ", 5, 1) "
-                + " END  " + " = " + "'" + s_day + "'"
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'"
                 + " GROUP BY " + col_time
                 + " ORDER BY 2 "
                 ;
@@ -4294,6 +4337,249 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         return s_return;
     }
+
+    public int estimatedCostPerDay(String s_day){
+
+        int s_return = 0;
+
+        String query = " SELECT ROUND( (SUM(estimated_cost * 1.0000)), 0) "
+                + " FROM ( SELECT (SELECT ROUND(( SUM(aa." + col_cost + " * 1.0000) / SUM(aa." + col_qty + " * 1.0000) ), 4) "
+                + "                FROM   " + tbl_stocks_history + " aa "
+                + "                WHERE  aa." + col_cost + " IS NOT NULL "
+                + "                       AND aa." + col_cost + " != 0 "
+                + "                       AND aa." + col_stock_id + " = b." + col_stock_id
+                + "                       ORDER BY ROWID DESC "
+                + "                       LIMIT 1 "
+                + "             ) * 1.0000 * b." + col_qty + " AS estimated_cost "
+                + "        FROM " + tbl_sales + " a, "
+                + "               " + tbl_composite_links + " b "
+                + "        WHERE  a." + col_item_id + " = b." + col_item_id
+                + "               AND a." + col_var_hdr_id + " IS NULL "
+                + "               AND b." + col_var_hdr_id + " IS NULL"
+                + " AND "
+                + " (" + " CASE "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH(a."+ col_date + ") = 12 THEN SUBSTR(a." + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR(a." + col_date + ", 5, 1) "
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'"
+                + "        UNION ALL "
+                + "        SELECT (SELECT ROUND(( SUM(aa." + col_cost + " * 1.0000) / SUM(aa." + col_qty + " * 1.0000) ), 4)"
+                + "                FROM " + tbl_stocks_history + " aa "
+                + "                WHERE  aa." + col_cost + " IS NOT NULL "
+                + "                       AND aa." + col_cost + " != 0 "
+                + "                       AND aa." + col_stock_id + "= b." + col_stock_id
+                + "                ORDER BY ROWID DESC"
+                + "                LIMIT 1"
+                + "             ) * 1.0000 * b." + col_qty + " AS estimated_cost "
+                + "        FROM " + tbl_sales + " a "
+                + "           , " + tbl_composite_links + " b "
+                + "        WHERE  a." + col_item_id + " = b." + col_item_id
+                + "               AND a." + col_var_hdr_id + " = b." + col_var_hdr_id
+                + "               AND a." + col_var_dtls_id + "= b." + col_var_dtls_id
+                + " AND "
+                + " (" + " CASE "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(a." + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH(a."+ col_date + ") = 12 THEN SUBSTR(a." + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR(a." + col_date + ", 5, 1) "
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'"
+                + ")";
+
+        Log.d("estimatedCostPerDay", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
+
+    public int estimatedReducedSales(String s_day){
+
+        int s_return = 0;
+
+        String query = " SELECT SUM(" + col_selling_price + " ) "
+                + " FROM ( "
+                + " SELECT sum( "
+                + col_selling_price
+                + ") AS " + col_selling_price
+                + " FROM " + tbl_sales + " a "
+                + " WHERE " + col_created_by + " = 'admin'"
+                + " AND " + col_machine_name + " = 'pos1'"
+                + " AND NOT EXISTS ("
+                + " SELECT 1 FROM " + tbl_sales + " b "
+                + " WHERE a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_date + " = b." + col_date
+                + " AND b." + col_item_name + " LIKE '%FP%'"
+                +" )"
+                + " AND "
+                + " (" + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'"
+                + " UNION ALL "
+                + " SELECT sum( "
+                + col_selling_price + " * 0.8 "
+                + ") AS " + col_selling_price
+                + " FROM " + tbl_sales + " a "
+                + " WHERE " + col_created_by + " = 'admin'"
+                + " AND " + col_machine_name + " = 'pos1'"
+                + " AND EXISTS ("
+                + " SELECT 1 FROM " + tbl_sales + " b "
+                + " WHERE a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_date + " = b." + col_date
+                + " AND b." + col_item_name + " LIKE '%FP%'"
+                +" )"
+                + " AND "
+                + " (" + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'"
+                + " ) "
+                ;
+
+        Log.d("estimatedReducedSales", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
+
+    public int estimatedFPSales(String s_day){
+
+        int s_return = 0;
+
+        String query = "SELECT sum( "
+                + col_selling_price + " * 0.8 "
+                + ") AS " + col_selling_price
+                + " FROM " + tbl_sales + " a "
+                + " WHERE " + col_created_by + " = 'admin'"
+                + " AND " + col_machine_name + " = 'pos1'"
+                + " AND EXISTS ("
+                + " SELECT 1 FROM " + tbl_sales + " b "
+                + " WHERE a." + col_item_id + " = b." + col_item_id
+                + " AND a." + col_date + " = b." + col_date
+                + " AND b." + col_item_name + " LIKE '%FP%'"
+                +" )"
+                + " AND "
+                + " (" + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'";
+
+        Log.d("estimatedFPSales", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
+
 
 
     public List<HelperSales> listSalesVsStocksPerDay(){
@@ -4503,6 +4789,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
             contentValues.put(col_composite_links, helperChanges.get(i).getComposite_links());
             contentValues.put(col_stock_histories, helperChanges.get(i).getStock_histories());
             contentValues.put(col_sales, helperChanges.get(i).getSales());
+            contentValues.put(col_fp_dtls, helperChanges.get(i).getFp_dtls());
 
             long result = db.insert(tbl_changes, null, contentValues);
             if (result == -1) {
@@ -4668,6 +4955,22 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
     public boolean dbChangedSales(){
         String query = "SELECT * FROM " + tbl_changes + " WHERE " + col_sales + " = 'Y'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            db.close();
+            Log.d("Record Already Exists", query);
+            return true;
+        }
+        Log.d("New Record  ", query);
+        db.close();
+
+        return false;
+    }
+
+    public boolean dbChangedFPDtls(){
+        String query = "SELECT * FROM " + tbl_changes + " WHERE " + col_fp_dtls + " = 'Y'";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
@@ -4881,6 +5184,80 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
     //DINE_IN_OUT end
 
+    //FP_DTLS start
+    public List<HelperFPDtls> listHelperFPDtls(){
+
+        List<HelperFPDtls> helperFPDtls = new LinkedList<HelperFPDtls>();
+        helperFPDtls.clear();
+
+        String query = "SELECT * FROM " + tbl_fp_dtls;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        HelperFPDtls helperFPDtl = null;
+
+        if (cursor.moveToFirst()) {
+            do {
+                helperFPDtl = new HelperFPDtls();
+                helperFPDtl.setFp_id(Integer.parseInt(cursor.getString(0)));
+                helperFPDtl.setFp_end_of_day_total(cursor.getString(1));
+                helperFPDtl.setFp_payment_advice(cursor.getString(2));
+                helperFPDtls.add(helperFPDtl);
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+        return helperFPDtls;
+    }
+
+    public void refreshFPDtls(List<HelperFPDtls> listHelperFPDtls){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        String query = "DELETE FROM " + tbl_fp_dtls;
+        db.execSQL(query);
+
+        for (int i=0; i < listHelperFPDtls.size(); i++) {
+            contentValues.put(col_fp_id, listHelperFPDtls.get(i).getFp_id());
+            contentValues.put(col_fp_end_of_day_total, listHelperFPDtls.get(i).getFp_end_of_day_total());
+            contentValues.put(col_fp_payment_advice, listHelperFPDtls.get(i).getFp_payment_advice());
+            long result = db.insert(tbl_fp_dtls, null, contentValues);
+            if (result == -1) {
+                Log.d("refreshFPDtls", "failed insert");
+            } else {
+                Log.d("refreshFPDtls", "success insert");
+            }
+        }
+
+        db.close();
+    }
+
+    public boolean addFPDtls(HelperFPDtls helperFPDtl){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(col_fp_id, helperFPDtl.getFp_id());
+        contentValues.put(col_fp_end_of_day_total, helperFPDtl.getFp_end_of_day_total());
+        contentValues.put(col_fp_payment_advice, helperFPDtl.getFp_payment_advice());
+        long result = db.insert(tbl_fp_dtls, null, contentValues);
+        db.close();
+
+        //if date as inserted incorrectly it will return -1
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void deleteFPDtls(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + tbl_fp_dtls;
+        db.execSQL(query);
+        db.close();
+    }
+    //FP_DTLS end
+
     //MAINTAIN start
     //Stock_id different name ( stock_names vs stocks_history )
 
@@ -4916,5 +5293,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     //MAINTAIN end
+
+
 
 }

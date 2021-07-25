@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_wave"
-    tools:context="com.watata.zpos.VariantsDtlsAddActivity">
-
+    tools:context=".FPDtlsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +22,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="32sp"
-                android:text="M > S > EVH > AVH > EVD \n>Add Variant Detail"
+                android:text="M > S > Add/Delete Stock Names"
                 android:fontFamily="@font/wendy_one"
                 android:textColor="#FFFFFF"/>
 
@@ -34,7 +31,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:src="@drawable/menu"/>
+                android:src="@drawable/inventory_new"/>
 
         </RelativeLayout>
 
@@ -46,8 +43,8 @@
             android:rowCount="6"
             android:alignmentMode="alignMargins"
             android:columnOrderPreserved="false"
-            android:paddingLeft="80dp"
-            android:paddingRight="80dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             >
 
             <androidx.cardview.widget.CardView
@@ -66,103 +63,92 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <ImageView
-                        android:id="@+id/image"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
-                        android:background="#E8E4E4" />
-
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Variant Details Name"
+                        android:text="End of day Total"
                         android:paddingTop="10dp"/>
 
                     <EditText
-                        android:id="@+id/name"
+                        android:id="@+id/fp_end_of_day_total"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textAlignment="center"
-                        android:hint="Enter Variant Details Name"
-                        android:maxLines="1"
-                        android:maxLength="20"
-                        android:ellipsize="end"
-                        android:gravity="center_horizontal"/>
+                        android:hint="fp_end_of_day_total"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Selling Price"
+                        android:text="Payment Advice"
                         android:paddingTop="10dp"/>
 
                     <EditText
-                        android:id="@+id/selling_price"
+                        android:id="@+id/fp_payment_advice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:textAlignment="center"
-                        android:inputType="number"
-                        android:hint="Selling Price"
-                        android:maxLines="1"
-                        android:maxLength="10"
-                        android:ellipsize="end"
-                        android:gravity="center_horizontal"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Set as Default"
-                        android:paddingTop="10dp"/>
-
-                    <CheckBox
-                        android:id="@+id/var_dtls_default"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        />
+                        android:hint="fp_payment_advice"/>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Composite required?"
-                        android:paddingTop="10dp"/>
-
-                    <CheckBox
-                        android:id="@+id/composite_required"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:checked="true"
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="Variant 1"
-                        android:paddingTop="10dp"/>
+                        android:paddingTop="20dp"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
                         android:padding="10dp"
-                        android:gravity="center"
+                        android:gravity="right"
                         >
-
-                        <Button
-                            android:id="@+id/save"
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Save"/>
+                            android:id="@+id/tvdate"/>
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btndate"
+                            android:text="Date"/>
+                        <Button
+                            android:id="@+id/add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add"/>
 
                         <Button
                             android:id="@+id/back"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Close"/>
+                            android:text="Back"/>
 
                     </LinearLayout>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TableLayout
+                            android:id="@+id/tblHistoryDtls"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ProgressBar
+                                android:layout_gravity="center"
+                                android:id="@+id/progressBar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                        </TableLayout>
+                    </HorizontalScrollView>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+
         </GridLayout>
 
+
+
     </LinearLayout>>
+
 
 </ScrollView>

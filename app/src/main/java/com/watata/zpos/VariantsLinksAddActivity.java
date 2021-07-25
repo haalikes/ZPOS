@@ -5,12 +5,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +35,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class VariantsLinksEditActivity extends AppCompatActivity {
+public class VariantsLinksAddActivity extends AppCompatActivity {
 
     float scale;
     Button addBtn, backBtn;
@@ -48,7 +50,7 @@ public class VariantsLinksEditActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_variants_links_edit);
+        setContentView(R.layout.activity_variants_links_add);
 
         item_id = getIntent().getIntExtra("item_id", 0);
 
@@ -255,6 +257,10 @@ public class VariantsLinksEditActivity extends AppCompatActivity {
 
             tableRow.addView(createTextViewTable(getVariantHdrName(listhelperVariantsLinks.get(row).getVar_hdr_id())), param);
 
+            ImageView addImage;
+            addImage = addImageVIew(listhelperVariantsLinks.get(row).getVar_hdr_id());
+            tableRow.addView(addImage, param);
+
         }
 
 
@@ -374,6 +380,38 @@ public class VariantsLinksEditActivity extends AppCompatActivity {
                 //Log.e(TAG, "onCancelled", databaseError.toException());
             }
         });
+    }
+
+    public ImageView addImageVIew(final int var_hdr_id){
+        int dp35 = (int) (35 * scale + 0.5f);
+        LinearLayout.LayoutParams lp35dp = new LinearLayout.LayoutParams( dp35, dp35);
+
+        //imageView add
+        ImageView addImmage = new ImageView(this);
+        lp35dp.weight = 1.0f;
+        lp35dp.gravity = Gravity.RIGHT;
+        addImmage.setLayoutParams(lp35dp);
+        addImmage.setImageResource(R.drawable.ic_edit);
+
+
+        addImmage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                openVariantsDtlsEditActivity(var_hdr_id);
+
+            }
+        });
+
+        return addImmage;
+    }
+
+    public void openVariantsDtlsEditActivity(int var_hdr_id) {
+        Intent intent = new Intent(this, VariantsDtlsEditActivity.class);
+        HelperVariantsHdr helperVariantsHdr = new HelperVariantsHdr();
+        helperVariantsHdr.setVar_hdr_id(var_hdr_id);
+        intent.putExtra("helperVariantsHdr", helperVariantsHdr);
+        startActivityForResult(intent, 2);
     }
 
 

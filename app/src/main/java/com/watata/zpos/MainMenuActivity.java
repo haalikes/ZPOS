@@ -30,7 +30,7 @@ import java.util.Calendar;
 public class MainMenuActivity extends AppCompatActivity {
 
     String username, all_date;
-    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks;
+    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks, llfpdtls;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView mainMenuText;
 
@@ -54,6 +54,7 @@ public class MainMenuActivity extends AppCompatActivity {
         llsetting = findViewById(R.id.llsetting);
         lldate = findViewById(R.id.lldate);
         mainMenuText = findViewById(R.id.mainmenutext);
+        llfpdtls = findViewById(R.id.llfpdtls);
     }
 
     public void setupListeners(){
@@ -195,6 +196,12 @@ public class MainMenuActivity extends AppCompatActivity {
             }
         };
 
+        llfpdtls.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openFPDtlsActivity();
+            }
+        });
     }
 
     public void openStocksActivity(){
@@ -229,7 +236,12 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
+    public void openFPDtlsActivity(){
+        Intent intent = new Intent(this, FPDtlsActivity.class);
+        intent.putExtra("all_date", all_date);
+        //intent.putExtra("username", username.getText().toString());
+        startActivity(intent);
+    }
 
     /*
     @Override

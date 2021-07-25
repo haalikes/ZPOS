@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,17 +14,30 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 public class VariantsDtlsAddActivity extends AppCompatActivity {
 
     Button saveBtn, cancelBtn;
     ImageView imageView;
     EditText editName, editSellingPrice;
-    CheckBox checkBoxDefault;
+    CheckBox checkBoxDefault, cbCompositeRequired;
     //int item_id, cat_id, var_link_id, stock_link_id;
     HelperVariantsDtls helperVariantsDtlsPrev;
+    Boolean bVarHasComposite;
+
+    //checking
+    //List<HelperCompositeLinks> listCompositeLinks = new LinkedList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,10 +45,15 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
         setContentView(R.layout.activity_variants_dtls_add);
 
         helperVariantsDtlsPrev = (HelperVariantsDtls) getIntent().getSerializableExtra("helperVariantsDtls");
-
+        initialize();
         setupXmlIds();
         setupListeners();
         copyValues();
+    }
+
+    public void initialize(){
+        bVarHasComposite = false;
+        checkCompositeLink( "" + helperVariantsDtlsPrev.getVar_dtls_id());
     }
 
     public void setupXmlIds(){
@@ -44,6 +63,7 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
         editName = findViewById(R.id.name);
         editSellingPrice = findViewById(R.id.selling_price);
         checkBoxDefault = findViewById(R.id.var_dtls_default);
+        cbCompositeRequired = findViewById(R.id.composite_required);
     }
 
     public void setupListeners(){
@@ -60,6 +80,10 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
                     resulhelperVariantsDtls.setVar_selling_price("" + editSellingPrice.getText());
                     if (checkBoxDefault.isChecked()){
                         resulhelperVariantsDtls.setVar_dtls_default("Y");
+                    }
+
+                    if (!cbCompositeRequired.isChecked()){
+                        resulhelperVariantsDtls.setComposite_required("N");
                     }
 
                     Intent resultIntent = new Intent();
@@ -91,6 +115,29 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
             }
         });
 
+        cbCompositeRequired.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*
+                Log.d("checkCompositeLink", "size=" + listCompositeLinks.size());
+
+                for (int i=0; i < listCompositeLinks.size(); i++){
+                    Log.d("checkCompositeLink", "composite_link_id=" + listCompositeLinks.get(i).getComposite_link_id());
+                    Log.d("checkCompositeLink", "item_id=" + listCompositeLinks.get(i).getItem_id());
+                    Log.d("checkCompositeLink", "var_hdr_id=" + listCompositeLinks.get(i).getVar_hdr_id());
+                    Log.d("checkCompositeLink", "var_dtls_id=" + listCompositeLinks.get(i).getVar_dtls_id());
+                    Log.d("checkCompositeLink", "unit=" + listCompositeLinks.get(i).getUnit());
+                }
+                */
+                if (!cbCompositeRequired.isChecked()){
+                    if (bVarHasComposite){
+                        popMessage("Cannot uncheck. Delete the composite of the variants in 1 or more items.");
+                        cbCompositeRequired.setChecked(true);
+                    }
+                }
+            }
+        });
+
     }
 
     public void copyValues(){
@@ -114,6 +161,14 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
         if (helperVariantsDtlsPrev.getVar_dtls_default() != null){
             if (helperVariantsDtlsPrev.getVar_dtls_default().equals("Y")){
                 checkBoxDefault.setChecked(true);
+            }
+        }
+
+
+        cbCompositeRequired.setChecked(true);
+        if (helperVariantsDtlsPrev.getComposite_required() != null) {
+            if (helperVariantsDtlsPrev.getComposite_required().equals("N")) {
+                cbCompositeRequired.setChecked(false);
             }
         }
 
@@ -158,6 +213,31 @@ public class VariantsDtlsAddActivity extends AppCompatActivity {
                 popMessage("No icon selected");
             }
         }
+
+    }
+
+    public void checkCompositeLink(String var_dtls_id){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        Query applesQuery = ref.child("composite_links").orderByChild("var_dtls_id").equalTo(var_dtls_id);
+        applesQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+
+                    for (DataSnapshot appleSnapshot : dataSnapshot.getChildren()) {
+                        //listCompositeLinks.add(appleSnapshot.getValue(HelperCompositeLinks.class));
+                        bVarHasComposite = true;
+                    }
+
+                    popMessage("Done checking");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                popMessage("Cannot connect to server - checkCompositeLink");
+            }
+        });
 
     }
 
