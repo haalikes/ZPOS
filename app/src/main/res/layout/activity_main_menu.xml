@@ -42,52 +42,47 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="6"
             android:alignmentMode="alignMargins"
+            android:columnCount="2"
             android:columnOrderPreserved="false"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            >
+            android:rowCount="6">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardCornerRadius="15dp"
+                android:layout_columnWeight="1"
                 android:layout_margin="12dp"
                 app:cardBackgroundColor="@color/transFull"
-                >
+                app:cardCornerRadius="15dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
+                    android:id="@+id/llmenu"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/llmenu"
-                    android:clickable="true"
                     android:background="@drawable/custom_bg_firstload"
-                    >
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/menu"
                         android:background="@drawable/custom_bg"
-                        />
+                        android:src="@drawable/menu" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Menu"
-                        android:paddingRight="2dp"
                         android:paddingLeft="2dp"
-                        />
+                        android:paddingRight="2dp"
+                        android:text="Menu"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -96,41 +91,37 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardCornerRadius="15dp"
+                android:layout_columnWeight="1"
                 android:layout_margin="12dp"
                 app:cardBackgroundColor="@color/transFull"
-                >
+                app:cardCornerRadius="15dp">
 
                 <LinearLayout
                     android:id="@+id/llstocks"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:clickable="true"
                     android:background="@drawable/custom_bg_firstload"
-                    >
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/ivStocks"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/inventory_new"
-                        />
+                        android:src="@drawable/inventory_new" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Inventory"
-                        android:paddingRight="2dp"
                         android:paddingLeft="2dp"
-                        />
+                        android:paddingRight="2dp"
+                        android:text="Inventory"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -138,109 +129,73 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="15dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/calendar"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/calendar"/>
+                        android:src="@drawable/calendar" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
                         android:text="Calendar"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/llfpdtls">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/foodpanda"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
-                        android:text="N/A"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
                 app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
+                    android:id="@+id/llsummary"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/llsummary"
-                    android:clickable="true"
                     android:background="@drawable/custom_bg_firstload"
-                    >
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/summary"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/summary"
                         android:background="@drawable/custom_bg"
-                        />
+                        android:src="@drawable/summary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
-                        android:text="Sales"
+                        android:paddingLeft="2dp"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
+                        android:text="Sales Per Day"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -249,158 +204,117 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
                 app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
+                    android:id="@+id/llSalesNStocks"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/llSalesNStocks"
-                    android:clickable="true"
                     android:background="@drawable/custom_bg_firstload"
-                    >
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/salesNStocks"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/summary"
                         android:background="@drawable/custom_bg"
-                        />
+                        android:src="@drawable/summary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
-                        android:text="SalesNStocks"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp"
-                app:cardBackgroundColor="@color/transFull"
-                >
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/llsetting"
-                    android:clickable="true"
-                    android:background="@drawable/custom_bg_firstload"
-                    >
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/settings"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Setting"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/zczach"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Not available"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp"
-                app:cardBackgroundColor="@color/transFull"
-                >
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/lldate"
-                    android:clickable="true"
-                    android:background="@drawable/custom_bg_firstload"
-                    >
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/settings"
-                        android:background="@drawable/custom_bg"
-                        />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Date"
-                        android:paddingRight="2dp"
                         android:paddingLeft="2dp"
-                        />
+                        android:paddingRight="2dp"
+                        android:text="Sales Graph"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/transFull"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:id="@+id/llsetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/custom_bg_firstload"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/settings" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="Setting"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
+                app:cardBackgroundColor="@color/transFull"
+                app:cardCornerRadius="15dp">
+
+                <LinearLayout
+                    android:id="@+id/lldate"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/custom_bg_firstload"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/custom_bg"
+                        android:src="@drawable/settings" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="Date"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -409,18 +323,18 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
                 app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:id="@+id/register"
@@ -432,11 +346,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
                         android:text="Cash Register"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -444,33 +358,103 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="15dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
+                    android:id="@+id/llfpdtls"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/zczach"/>
+                        android:src="@drawable/foodpanda" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Not Available"
+                        android:paddingLeft="2dp"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
+                        android:text="FP Input"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:id="@+id/llfpgraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/foodpanda" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="FP Weekly"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="15dp"
+                app:cardElevation="6dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:id="@+id/llfpgraphweekly">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/zczach" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:paddingLeft="2dp"
+                        android:paddingRight="2dp"
+                        android:text="N/A"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -479,33 +463,34 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
-                app:cardElevation="6dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="12dp"
                 app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
+                app:cardElevation="6dp">
 
                 <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:id="@+id/llfptable">
 
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/zczach"/>
+                        android:src="@drawable/foodpanda" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Not Available"
+                        android:paddingLeft="2dp"
                         android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
+                        android:text="FP Table"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

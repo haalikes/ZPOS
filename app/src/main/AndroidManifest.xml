@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".FPDtlsActivity"></activity>
+        <activity android:name=".FPDtlsTableActivity"></activity>
+        <activity android:name=".EODGraphFPActivity" />
+        <activity android:name=".FPDtlsActivity" />
         <activity android:name=".SalesAndStocksActivity" />
         <activity android:name=".StocksDayActivity" />
         <activity android:name=".SalesDayActivity" />

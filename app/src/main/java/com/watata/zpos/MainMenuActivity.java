@@ -1,28 +1,15 @@
 package com.watata.zpos;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -30,7 +17,7 @@ import java.util.Calendar;
 public class MainMenuActivity extends AppCompatActivity {
 
     String username, all_date;
-    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks, llfpdtls;
+    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks, llfpdtls, llfpgraph, llfptable;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView mainMenuText;
 
@@ -55,6 +42,8 @@ public class MainMenuActivity extends AppCompatActivity {
         lldate = findViewById(R.id.lldate);
         mainMenuText = findViewById(R.id.mainmenutext);
         llfpdtls = findViewById(R.id.llfpdtls);
+        llfpgraph = findViewById(R.id.llfpgraph);
+        llfptable = findViewById(R.id.llfptable);
     }
 
     public void setupListeners(){
@@ -202,6 +191,20 @@ public class MainMenuActivity extends AppCompatActivity {
                 openFPDtlsActivity();
             }
         });
+
+        llfpgraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openFPGraphActivity();
+            }
+        });
+
+        llfptable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openFPTableActivity();
+            }
+        });
     }
 
     public void openStocksActivity(){
@@ -238,6 +241,20 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void openFPDtlsActivity(){
         Intent intent = new Intent(this, FPDtlsActivity.class);
+        intent.putExtra("all_date", all_date);
+        //intent.putExtra("username", username.getText().toString());
+        startActivity(intent);
+    }
+
+    public void openFPGraphActivity(){
+        Intent intent = new Intent(this, EODGraphFPActivity.class);
+        intent.putExtra("all_date", all_date);
+        //intent.putExtra("username", username.getText().toString());
+        startActivity(intent);
+    }
+
+    public void openFPTableActivity(){
+        Intent intent = new Intent(this, FPDtlsTableActivity.class);
         intent.putExtra("all_date", all_date);
         //intent.putExtra("username", username.getText().toString());
         startActivity(intent);

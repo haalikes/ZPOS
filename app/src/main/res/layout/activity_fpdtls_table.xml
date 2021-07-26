@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FPDtlsTableActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="32sp"
+                android:text="M > S > Add/Delete Stock Names"
+                android:fontFamily="@font/wendy_one"
+                android:textColor="#FFFFFF"/>
+
+
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/inventory_new"/>
+
+        </RelativeLayout>
+
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="1"
+            android:rowCount="6"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="20dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:padding="10dp"
+                        android:gravity="right"
+                        >
+
+                        <Button
+                            android:id="@+id/back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Back"/>
+
+                    </LinearLayout>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TableLayout
+                            android:id="@+id/tblHistoryDtls"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            >
+
+                            <ProgressBar
+                                android:layout_gravity="center"
+                                android:id="@+id/progressBar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                        </TableLayout>
+                    </HorizontalScrollView>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
+        </GridLayout>
+
+
+
+    </LinearLayout>>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

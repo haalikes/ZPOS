@@ -2,6 +2,7 @@ package com.watata.zpos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -9,6 +10,8 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -30,6 +33,8 @@ public class SalesDayActivity extends AppCompatActivity {
 
         ArrayList<BarEntry> entries = new ArrayList<>();
         entries.clear();
+        ArrayList<BarEntry> estimatedCost = new ArrayList<>();
+        estimatedCost.clear();
         ArrayList<String> dates = new ArrayList<>();
         dates.clear();
 
@@ -38,6 +43,7 @@ public class SalesDayActivity extends AppCompatActivity {
             //Log.d("listSummarySalesPerDay5", helperSales.get(i).getQty());
             //Log.d("listSummarySalesPerDay6", helperSales.get(i).getItem_name());
             entries.add(new BarEntry(Integer.parseInt(helperSales.get(i).getSelling_price()), Integer.parseInt(helperSales.get(i).getQty())));
+            estimatedCost.add(new BarEntry(helperDatabase.estimatedCostPerDay(helperSales.get(i).getItem_name()), Integer.parseInt(helperSales.get(i).getQty())));
             dates.add(helperSales.get(i).getItem_name());
             //only on this activity, because date is transform in helper, cannot use it
         }
@@ -55,8 +61,14 @@ public class SalesDayActivity extends AppCompatActivity {
 
 
         BarDataSet barDataSet = new BarDataSet(entries, "Sales");
+        barDataSet.setColor(Color.BLUE);
+
+        BarDataSet barDataSetEstimatedCost = new BarDataSet(estimatedCost, "Cost");
+        barDataSetEstimatedCost.setColor(Color.GREEN);
 
         BarData mergeData = new BarData(dates, barDataSet);
+        mergeData.addDataSet(barDataSetEstimatedCost);
+
         barChart.setData(mergeData);
         barChart.setTouchEnabled(true);
 

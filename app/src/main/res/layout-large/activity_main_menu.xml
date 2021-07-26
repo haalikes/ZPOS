@@ -170,39 +170,7 @@
             </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/llfpdtls">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/foodpanda"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="18sp"
-                        android:text="N/A"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp" />
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
@@ -329,39 +297,7 @@
             </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="15dp"
-                android:layout_margin="12dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:src="@drawable/zczach"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:textColor="@color/MainMenu"
-                        android:textSize="18sp"
-                        android:text="Not available"
-                        android:paddingRight="2dp"
-                        android:paddingLeft="2dp"/>
-
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
@@ -446,6 +382,40 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_rowWeight="1"
+                app:cardCornerRadius="15dp"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/llfpdtls">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/foodpanda"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="18sp"
+                        android:text="FP Input"
+                        android:paddingRight="2dp"
+                        android:paddingLeft="2dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 app:cardElevation="6dp"
                 app:cardCornerRadius="15dp"
                 android:layout_margin="12dp">
@@ -460,6 +430,41 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
+                        android:src="@drawable/foodpanda"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:textColor="@color/MainMenu"
+                        android:textSize="18sp"
+                        android:text="FP Weekly"
+                        android:paddingRight="2dp"
+                        android:paddingLeft="2dp"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="15dp"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/llfpgraphweekly">
+
+                    <ImageView
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
                         android:src="@drawable/zczach"/>
 
                     <TextView
@@ -468,7 +473,7 @@
                         android:layout_marginTop="12dp"
                         android:textColor="@color/MainMenu"
                         android:textSize="18sp"
-                        android:text="Not Available"
+                        android:text="N/A"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp"/>
 
@@ -490,12 +495,13 @@
                     android:padding="16dp"
                     android:gravity="center"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:id="@+id/llfptable">
 
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/zczach"/>
+                        android:src="@drawable/foodpanda"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -503,7 +509,7 @@
                         android:layout_marginTop="12dp"
                         android:textColor="@color/MainMenu"
                         android:textSize="18sp"
-                        android:text="Not Available"
+                        android:text="FP Table"
                         android:paddingRight="2dp"
                         android:paddingLeft="2dp"/>
 

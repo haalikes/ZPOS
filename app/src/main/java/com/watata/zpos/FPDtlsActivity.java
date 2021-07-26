@@ -70,8 +70,8 @@ public class FPDtlsActivity extends AppCompatActivity {
         dateBtn = findViewById(R.id.btndate);
         addBtn = (Button) findViewById(R.id.add);
         backBtn = (Button) findViewById(R.id.back);
-        eFpEndOfDayTotal = findViewById(R.id.item_name);
-        ePaymentAdvice = findViewById(R.id.measure_name);
+        eFpEndOfDayTotal = findViewById(R.id.fp_end_of_day_total);
+        ePaymentAdvice = findViewById(R.id.fp_payment_advice);
         progressBar = findViewById(R.id.progressBar);
         tlFPDtls = findViewById(R.id.tblHistoryDtls);
 
@@ -82,12 +82,23 @@ public class FPDtlsActivity extends AppCompatActivity {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HelperFPDtls helperFPDtls = new HelperFPDtls(
-                        listHelperFPDtls.get(listHelperFPDtls.size()-1).getFp_id() + 1
-                        , all_date
-                        , eFpEndOfDayTotal.getText().toString()
-                        , ePaymentAdvice.getText().toString()
-                );
+                HelperFPDtls helperFPDtls;
+                if (listHelperFPDtls.size() == 0){
+                    helperFPDtls = new HelperFPDtls(
+                            0
+                            , all_date
+                            , eFpEndOfDayTotal.getText().toString()
+                            , ePaymentAdvice.getText().toString()
+                    );
+                } else {
+                    helperFPDtls = new HelperFPDtls(
+                            listHelperFPDtls.get(listHelperFPDtls.size()-1).getFp_id() + 1
+                            , all_date
+                            , eFpEndOfDayTotal.getText().toString()
+                            , ePaymentAdvice.getText().toString()
+                    );
+                }
+
 
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("fp_dtls");
                 reference.child("" + helperFPDtls.getFp_id()).setValue(helperFPDtls);

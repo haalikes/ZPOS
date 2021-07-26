@@ -13,6 +13,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class HelperDatabase extends SQLiteOpenHelper {
+
+    private static final int DATABASE_VERSION = 75;
+
     private static final int sale_sorter = 100;
     private static final int days_covered = 120;
 
@@ -130,12 +133,13 @@ public class HelperDatabase extends SQLiteOpenHelper {
     //fp details
     private static final String tbl_fp_dtls = "fp_dtls";
     private static final String col_fp_id = "fp_id";
+    private static final String col_fp_date = "fp_date";
     private static final String col_fp_end_of_day_total = "fp_end_of_day_total";
     private static final String col_fp_payment_advice = "fp_payment_advice";
 
 
     public HelperDatabase(Context context) {
-        super(context, DB_NAME, null, 71);
+        super(context, DB_NAME, null, DATABASE_VERSION);
     }
 
     @Override
@@ -258,6 +262,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
             //fp_dtls
             createTable = "CREATE TABLE " + tbl_fp_dtls + " ( " + col_fp_id + " INTEGER "
+                    + " ," + col_fp_date + " TEXT "
                     + " ," + col_fp_end_of_day_total + " TEXT "
                     + " ," + col_fp_payment_advice + " TEXT "
                     + ")";
@@ -274,19 +279,22 @@ public class HelperDatabase extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("DROP TABLE IF EXISTS " + TBL_STOCK_NAMES);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_stocks_history);
-        db.execSQL("DROP TABLE IF EXISTS " + TBL_CATEGORY);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_items);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_variants_links);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_variants_hdr);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_variants_dtls);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_sales);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_changes);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_composite_links);
-        db.execSQL("DROP TABLE IF EXISTS " + tbl_fp_dtls);
-        onCreate(db);
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(newVersion>oldVersion){
+            db.execSQL("DROP TABLE IF EXISTS " + TBL_STOCK_NAMES);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_stocks_history);
+            db.execSQL("DROP TABLE IF EXISTS " + TBL_CATEGORY);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_items);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_variants_links);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_variants_hdr);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_variants_dtls);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_sales);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_changes);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_composite_links);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_fp_dtls);
+            onCreate(db);
+        }
+
     }
 
     //STOCK_NAMES start
@@ -4174,6 +4182,236 @@ public class HelperDatabase extends SQLiteOpenHelper {
         return helperSales;
     }
 
+    public List<HelperSales> listEODGraphFP(){
+        List<HelperSales> helperSales = new LinkedList<>();
+        helperSales.clear();
+
+        String query = "SELECT sum(" + col_fp_end_of_day_total + ") AS " + col_fp_end_of_day_total
+                + ", ("
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " FROM " + tbl_fp_dtls
+                + " WHERE "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_fp_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-" + days_covered + " day'))"
+                + " GROUP BY " + col_fp_date
+                + " ORDER BY 2 "
+                ;
+
+        Log.d("listEODGraphFP", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        HelperSales helperSale = null;
+        int row_num = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+                helperSale = new HelperSales();
+                helperSale.setSelling_price(cursor.getString(0));
+                helperSale.setItem_name(cursor.getString(1));
+                helperSale.setQty("" + row_num);
+                helperSales.add(helperSale);
+                row_num += 1;
+
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+        return helperSales;
+    }
+
+    public List<HelperSales> listEODGraphFPWeekly(){
+        List<HelperSales> helperSales = new LinkedList<>();
+        helperSales.clear();
+
+        String query = "SELECT sum(" + col_fp_end_of_day_total + ") AS " + col_fp_end_of_day_total
+                + ", strftime( '%W', "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_fp_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  "
+                + ")"
+                + ", "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " FROM " + tbl_fp_dtls
+                + " WHERE "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_fp_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  " + " >= " + " (SELECT DATETIME('now', '-" + days_covered + " day'))"
+                + " GROUP BY "
+                + " strftime( '%W', "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_fp_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  "
+                + ")"
+                + ", "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " ORDER BY 2 "
+                ;
+
+        Log.d("listEODGraphFP", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        HelperSales helperSale = null;
+        int row_num = 0;
+
+        if (cursor.moveToFirst()) {
+            do {
+                helperSale = new HelperSales();
+                helperSale.setSelling_price(cursor.getString(0));
+                helperSale.setItem_name(cursor.getString(1));   //week
+                helperSale.setCreated_by(cursor.getString(2));  //month
+                helperSale.setQty("" + row_num);
+                helperSales.add(helperSale);
+                row_num += 1;
+
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+        return helperSales;
+    }
+
+
     public List<HelperSales> listStocksPricePerDay(){
         //set to helpersales so that we can merge this with salesperday later
         List<HelperSales> helperSales = new LinkedList<>();
@@ -4432,6 +4670,130 @@ public class HelperDatabase extends SQLiteOpenHelper {
         return s_return;
     }
 
+    public int estimatedCostPerWeek(String s_week, String s_month){
+
+        int s_return = 0;
+
+        String query = " SELECT ROUND( (SUM(estimated_cost * 1.0000)), 0) "
+                + " FROM ( SELECT (SELECT ROUND(( SUM(aa." + col_cost + " * 1.0000) / SUM(aa." + col_qty + " * 1.0000) ), 4) "
+                + "                FROM   " + tbl_stocks_history + " aa "
+                + "                WHERE  aa." + col_cost + " IS NOT NULL "
+                + "                       AND aa." + col_cost + " != 0 "
+                + "                       AND aa." + col_stock_id + " = b." + col_stock_id
+                + "                       ORDER BY ROWID DESC "
+                + "                       LIMIT 1 "
+                + "             ) * 1.0000 * b." + col_qty + " AS estimated_cost "
+                + "        FROM " + tbl_sales + " a, "
+                + "               " + tbl_composite_links + " b "
+                + "        WHERE  a." + col_item_id + " = b." + col_item_id
+                + "               AND a." + col_var_hdr_id + " IS NULL "
+                + "               AND b." + col_var_hdr_id + " IS NULL"
+                + " AND "
+                + " strftime( '%W', "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " = " + "'" + s_week + "'"
+                + "        UNION ALL "
+                + "        SELECT (SELECT ROUND(( SUM(aa." + col_cost + " * 1.0000) / SUM(aa." + col_qty + " * 1.0000) ), 4)"
+                + "                FROM " + tbl_stocks_history + " aa "
+                + "                WHERE  aa." + col_cost + " IS NOT NULL "
+                + "                       AND aa." + col_cost + " != 0 "
+                + "                       AND aa." + col_stock_id + "= b." + col_stock_id
+                + "                ORDER BY ROWID DESC"
+                + "                LIMIT 1"
+                + "             ) * 1.0000 * b." + col_qty + " AS estimated_cost "
+                + "        FROM " + tbl_sales + " a "
+                + "           , " + tbl_composite_links + " b "
+                + "        WHERE  a." + col_item_id + " = b." + col_item_id
+                + "               AND a." + col_var_hdr_id + " = b." + col_var_hdr_id
+                + "               AND a." + col_var_dtls_id + "= b." + col_var_dtls_id
+                + " AND "
+                + " strftime( '%W', "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_date + ") = 12 THEN SUBSTR(" + col_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_date + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " = " + "'" + s_week + "'"
+                + " AND "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " = " + "'" + s_month + "'"
+                + ")";
+
+        Log.d("estimatedCostPerDay", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
+
+
     public int estimatedReducedSales(String s_day){
 
         int s_return = 0;
@@ -4580,7 +4942,121 @@ public class HelperDatabase extends SQLiteOpenHelper {
         return s_return;
     }
 
+    public int paymentAdvice(String s_day){
 
+        int s_return = 0;
+
+        String query = "SELECT sum( "
+                + col_fp_payment_advice
+                + ") AS " + col_fp_payment_advice
+                + " FROM " + tbl_fp_dtls + " a "
+                + " WHERE "
+                + " (" + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  "
+                + ") "
+                + " = " + "'" + s_day + "'";
+
+        Log.d("estimatedFPSales", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
+
+    public int paymentAdviceWeekly(String s_week, String s_month){
+
+        int s_return = 0;
+
+        String query = "SELECT sum( "
+                + col_fp_payment_advice
+                + ") AS " + col_fp_payment_advice
+                + " FROM " + tbl_fp_dtls + " a "
+                + " WHERE "
+                + " strftime( '%W', "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 9, 4 ) "
+                + " ELSE  SUBSTR( " + col_fp_date + ", 8, 4) "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " || '-' || "
+                + " CASE "
+                + " WHEN LENGTH("+ col_fp_date + ") = 12 THEN SUBSTR(" + col_fp_date + ", 5, 2 ) "
+                + " ELSE  '0' || SUBSTR( " + col_fp_date + ", 5, 1) "
+                + " END  "
+                + ")"
+                + " = " + "'" + s_week + "'"
+                + " AND "
+                + " CASE "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jan' THEN '01' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Feb' THEN '02' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Mar' THEN '03' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Apr' THEN '04' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'May' THEN '05' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jun' THEN '06' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Jul' THEN '07' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Aug' THEN '08' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Sep' THEN '09' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Oct' THEN '10' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Nov' THEN '11' "
+                + " WHEN SUBSTR(" + col_fp_date + ", 1, 3 ) = 'Dec' THEN '12' "
+                + " ELSE '01' "
+                + " END "
+                + " = " + "'" + s_month + "'"
+                ;
+
+        Log.d("estimatedFPSales", query);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            s_return = cursor.getInt(0);
+        }
+
+        db.close();
+
+        return s_return;
+    }
 
     public List<HelperSales> listSalesVsStocksPerDay(){
         //set to helpersales so that we can merge this with salesperday later
@@ -5199,8 +5675,9 @@ public class HelperDatabase extends SQLiteOpenHelper {
             do {
                 helperFPDtl = new HelperFPDtls();
                 helperFPDtl.setFp_id(Integer.parseInt(cursor.getString(0)));
-                helperFPDtl.setFp_end_of_day_total(cursor.getString(1));
-                helperFPDtl.setFp_payment_advice(cursor.getString(2));
+                helperFPDtl.setFp_date(cursor.getString(1));
+                helperFPDtl.setFp_end_of_day_total(cursor.getString(2));
+                helperFPDtl.setFp_payment_advice(cursor.getString(3));
                 helperFPDtls.add(helperFPDtl);
             } while (cursor.moveToNext());
         }
@@ -5219,6 +5696,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         for (int i=0; i < listHelperFPDtls.size(); i++) {
             contentValues.put(col_fp_id, listHelperFPDtls.get(i).getFp_id());
+            contentValues.put(col_fp_date, listHelperFPDtls.get(i).getFp_date());
             contentValues.put(col_fp_end_of_day_total, listHelperFPDtls.get(i).getFp_end_of_day_total());
             contentValues.put(col_fp_payment_advice, listHelperFPDtls.get(i).getFp_payment_advice());
             long result = db.insert(tbl_fp_dtls, null, contentValues);
@@ -5237,6 +5715,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(col_fp_id, helperFPDtl.getFp_id());
+        contentValues.put(col_fp_date, helperFPDtl.getFp_date());
         contentValues.put(col_fp_end_of_day_total, helperFPDtl.getFp_end_of_day_total());
         contentValues.put(col_fp_payment_advice, helperFPDtl.getFp_payment_advice());
         long result = db.insert(tbl_fp_dtls, null, contentValues);
