@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 public class SettingActivity extends AppCompatActivity {
 
-    ImageView iEditStockName, iCategoryEdit, iEditVariants;
+    ImageView iEditStockName, iCategoryEdit, iEditVariants, iEditCsvLinks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class SettingActivity extends AppCompatActivity {
         iEditStockName = findViewById(R.id.itemnamesetting);
         iCategoryEdit = findViewById(R.id.editcategory);
         iEditVariants = findViewById(R.id.editvariants);
+        iEditCsvLinks = findViewById(R.id.aditcsvlinks);
     }
 
     public void setupBtnListneres(){
@@ -49,6 +50,13 @@ public class SettingActivity extends AppCompatActivity {
                 openVariantsHdrEditActivity();
             }
         });
+
+        iEditCsvLinks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openCsvLinksEditActivity();
+            }
+        });
     }
 
     public void openStockNamesEditActivity() {
@@ -63,6 +71,11 @@ public class SettingActivity extends AppCompatActivity {
 
     public void openVariantsHdrEditActivity() {
         Intent intent = new Intent(this, VariantsHdrEditActivity.class);
+        startActivity(intent);
+    }
+
+    public void openCsvLinksEditActivity() {
+        Intent intent = new Intent(this, CsvLinksEditActivity.class);
         startActivity(intent);
     }
 }

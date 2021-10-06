@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context=".ProcessExportFileActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="/yourfile.txt"
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="127dp"
+        android:textSize="20dp"
+        android:id="@+id/etFile"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select file"
+        tools:layout_editor_absoluteX="166dp"
+        tools:layout_editor_absoluteY="158dp"
+        android:id="@+id/selectFile"
+        android:onClick="openFileChooser"
+        />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Process Loyverse"
+        android:id="@+id/loyverseBtn"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Process Foodpanda"
+        android:id="@+id/foodpandBtn"
+        android:onClick="openFoodPandaFile"
+        />
+
+</LinearLayout>

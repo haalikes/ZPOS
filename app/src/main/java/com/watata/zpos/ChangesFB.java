@@ -90,4 +90,12 @@ public class ChangesFB {
         reference.child("fp_dtls").setValue("N");
     }
 
+    public void ChangesCSVLinks(){
+        reference.child("csv_links").setValue("Y");
+    }
+
+    public void NoChangesCSVLinks(){
+        reference.child("csv_links").setValue("N");
+    }
+
 }

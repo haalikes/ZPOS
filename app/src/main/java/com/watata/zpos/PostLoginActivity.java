@@ -444,6 +444,37 @@ public class PostLoginActivity extends AppCompatActivity {
                         helperDatabase.refreshFPDtls(helperFPDtls);
                         ChangesFB changesFB = new ChangesFB();
                         changesFB.NoChangesFPDtls();
+                        downloadCSVLinks();
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+        } else {
+            openMainMenuActivity();
+        }
+
+    }
+
+    public void downloadCSVLinks(){
+        if(helperDatabase.dbChangedFPDtls()){
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("csv_links");
+            reference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()){
+                        List<HelperCsvLinks> helperCsvLinks = new ArrayList<>();
+                        helperCsvLinks.clear();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            helperCsvLinks.add(snapshot.getValue(HelperCsvLinks.class));
+                        }
+                        helperDatabase.refreshCSVLinks(helperCsvLinks);
+                        ChangesFB changesFB = new ChangesFB();
+                        changesFB.NoChangesCSVLinks();
                         openMainMenuActivity();
                     }
                     progressBar.setVisibility(View.GONE);
@@ -452,6 +483,7 @@ public class PostLoginActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     progressBar.setVisibility(View.GONE);
+                    openMainMenuActivity();
                 }
             });
         } else {

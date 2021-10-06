@@ -17,7 +17,7 @@ import java.util.Calendar;
 public class MainMenuActivity extends AppCompatActivity {
 
     String username, all_date;
-    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks, llfpdtls, llfpgraph, llfptable;
+    LinearLayout llstocks, llmenu, llsummary, llsetting, lldate, llsalesnstocks, llfpdtls, llfpgraph, llfptable, llprocessexportfile;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     TextView mainMenuText;
 
@@ -44,6 +44,7 @@ public class MainMenuActivity extends AppCompatActivity {
         llfpdtls = findViewById(R.id.llfpdtls);
         llfpgraph = findViewById(R.id.llfpgraph);
         llfptable = findViewById(R.id.llfptable);
+        llprocessexportfile = findViewById(R.id.llprocessexportfile);
     }
 
     public void setupListeners(){
@@ -205,6 +206,13 @@ public class MainMenuActivity extends AppCompatActivity {
                 openFPTableActivity();
             }
         });
+
+        llprocessexportfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openProcessExportFileActivity();
+            }
+        });
     }
 
     public void openStocksActivity(){
@@ -255,6 +263,13 @@ public class MainMenuActivity extends AppCompatActivity {
 
     public void openFPTableActivity(){
         Intent intent = new Intent(this, FPDtlsTableActivity.class);
+        intent.putExtra("all_date", all_date);
+        //intent.putExtra("username", username.getText().toString());
+        startActivity(intent);
+    }
+
+    public void openProcessExportFileActivity(){
+        Intent intent = new Intent(this, ProcessExportFileActivity.class);
         intent.putExtra("all_date", all_date);
         //intent.putExtra("username", username.getText().toString());
         startActivity(intent);

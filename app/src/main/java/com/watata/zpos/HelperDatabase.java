@@ -14,7 +14,7 @@ import java.util.List;
 
 public class HelperDatabase extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 75;
+    private static final int DATABASE_VERSION = 78;
 
     private static final int sale_sorter = 100;
     private static final int days_covered = 120;
@@ -137,6 +137,12 @@ public class HelperDatabase extends SQLiteOpenHelper {
     private static final String col_fp_end_of_day_total = "fp_end_of_day_total";
     private static final String col_fp_payment_advice = "fp_payment_advice";
 
+    //csv link
+    private static final String tbl_csv_links = "csv_links";
+    private static final String col_csv_links_id = "csv_links_id";
+    private static final String col_link_type = "link_type";
+    private static final String col_link_type_value = "link_type_value";
+    private static final String col_csv_link_name = "csv_link_name";
 
     public HelperDatabase(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
@@ -268,6 +274,14 @@ public class HelperDatabase extends SQLiteOpenHelper {
                     + ")";
             db.execSQL(createTable);
 
+            //csv_links
+            createTable = "CREATE TABLE " + tbl_csv_links + " ( " + col_csv_links_id + " TEXT "
+                    + " ," + col_link_type + " TEXT "
+                    + " ," + col_link_type_value + " TEXT "
+                    + " ," + col_csv_link_name + " TEXT "
+                    + ")";
+            db.execSQL(createTable);
+
         } catch (SQLiteException e) {
             try {
                 throw new IOException(e);
@@ -292,6 +306,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + tbl_changes);
             db.execSQL("DROP TABLE IF EXISTS " + tbl_composite_links);
             db.execSQL("DROP TABLE IF EXISTS " + tbl_fp_dtls);
+            db.execSQL("DROP TABLE IF EXISTS " + tbl_csv_links);
             onCreate(db);
         }
 
@@ -403,6 +418,20 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
         db.close();
         return itemName;
+    }
+
+    public String getItemSellingPrice(String item_id){
+        String selling_price = "";
+        String query = "SELECT " + col_selling_price + " FROM " + tbl_items + " WHERE " + col_item_id + " = " + item_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            selling_price = cursor.getString(0);
+        }
+
+        db.close();
+        return selling_price;
     }
 
     public void deleteStockNames(){
@@ -2540,6 +2569,20 @@ public class HelperDatabase extends SQLiteOpenHelper {
         db.close();
 
         return true;
+    }
+
+    public String getVarHdrId(String var_dtls_id){
+        String var_hdr_id = "";
+        String query = "SELECT " + col_var_hdr_id + " FROM " + tbl_variants_dtls + " WHERE " + col_var_dtls_id + " = " + var_dtls_id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        if (cursor.moveToFirst()) {
+            var_hdr_id = cursor.getString(0);
+        }
+
+        db.close();
+        return var_hdr_id;
     }
 
     //VARIANTS_DTLS end
@@ -5736,6 +5779,101 @@ public class HelperDatabase extends SQLiteOpenHelper {
         db.close();
     }
     //FP_DTLS end
+
+    //CSV_LINKS start
+    public List<HelperCsvLinks> listHelperCsvLinks(){
+
+        List<HelperCsvLinks> helperCsvLinks = new LinkedList<>();
+        helperCsvLinks.clear();
+
+        String query = "SELECT * FROM " + tbl_fp_dtls;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        HelperCsvLinks helperCsvLink = null;
+
+        if (cursor.moveToFirst()) {
+            do {
+                helperCsvLink = new HelperCsvLinks();
+                helperCsvLink.setLink_type(cursor.getString(0));
+                helperCsvLink.setLink_type_value(cursor.getString(1));
+                helperCsvLink.setCsv_link_name(cursor.getString(2));
+                helperCsvLinks.add(helperCsvLink);
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+
+        return helperCsvLinks;
+    }
+
+    public void refreshCSVLinks(List<HelperCsvLinks> listHelperCsvLinks){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        String query = "DELETE FROM " + tbl_csv_links;
+        db.execSQL(query);
+
+        for (int i=0; i < listHelperCsvLinks.size(); i++) {
+
+            contentValues.put(col_csv_links_id, listHelperCsvLinks.get(i).getCsv_link_id());
+            contentValues.put(col_link_type, listHelperCsvLinks.get(i).getLink_type());
+            contentValues.put(col_link_type_value, listHelperCsvLinks.get(i).getLink_type_value());
+            contentValues.put(col_csv_link_name, listHelperCsvLinks.get(i).getCsv_link_name());
+            long result = db.insert(tbl_csv_links, null, contentValues);
+            if (result == -1) {
+                Log.d("refreshCSVLinks", "failed insert");
+            } else {
+                Log.d("refreshCSVLinks", "success insert");
+            }
+        }
+
+        db.close();
+    }
+
+    public boolean addCSVLinks(HelperCsvLinks helperCsvLinks){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(col_csv_links_id, helperCsvLinks.getCsv_link_id());
+        contentValues.put(col_link_type, helperCsvLinks.getLink_type());
+        contentValues.put(col_link_type_value, helperCsvLinks.getLink_type_value());
+        contentValues.put(col_csv_link_name, helperCsvLinks.getCsv_link_name());
+        long result = db.insert(tbl_csv_links, null, contentValues);
+        db.close();
+
+        //if date as inserted incorrectly it will return -1
+        if (result == -1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public void deleteCSVLinks(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + tbl_csv_links;
+        db.execSQL(query);
+        db.close();
+    }
+
+    public List<String> listLinkTypeValues(String link_type, String csv_link_name){
+        String link_type_value = "";
+        List<String> listLink_values = new LinkedList<>();
+        String query = "SELECT " + col_link_type_value + " FROM " + tbl_csv_links + " WHERE " + col_link_type + " = '" + link_type + "'" + " AND " + col_csv_link_name + " = '" + csv_link_name + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+        listLink_values.clear();
+
+        if (cursor.moveToFirst()) {
+            do {
+                listLink_values.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        db.close();
+        return listLink_values;
+    }
+    //CSV_LINKS end
 
     //MAINTAIN start
     //Stock_id different name ( stock_names vs stocks_history )
