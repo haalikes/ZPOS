@@ -422,7 +422,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
 
     public String getItemSellingPrice(String item_id){
         String selling_price = "";
-        String query = "SELECT " + col_selling_price + " FROM " + tbl_items + " WHERE " + col_item_id + " = " + item_id;
+        String query = "SELECT " + col_item_selling_price + " FROM " + tbl_items + " WHERE " + col_item_id + " = " + item_id;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
@@ -5860,6 +5860,7 @@ public class HelperDatabase extends SQLiteOpenHelper {
         String link_type_value = "";
         List<String> listLink_values = new LinkedList<>();
         String query = "SELECT " + col_link_type_value + " FROM " + tbl_csv_links + " WHERE " + col_link_type + " = '" + link_type + "'" + " AND " + col_csv_link_name + " = '" + csv_link_name + "'";
+        Log.d("texto=", "query=" + query );
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
         listLink_values.clear();

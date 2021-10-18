@@ -455,13 +455,16 @@ public class PostLoginActivity extends AppCompatActivity {
                 }
             });
         } else {
-            openMainMenuActivity();
+            downloadCSVLinks();
         }
 
     }
 
     public void downloadCSVLinks(){
+        /*
         if(helperDatabase.dbChangedFPDtls()){
+            */
+        Log.d("refreshCSVLinks", "start");
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("csv_links");
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -486,9 +489,12 @@ public class PostLoginActivity extends AppCompatActivity {
                     openMainMenuActivity();
                 }
             });
+        Log.d("refreshCSVLinks", "end");
+          /*
         } else {
             openMainMenuActivity();
         }
+        */
 
     }
 

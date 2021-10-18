@@ -126,7 +126,12 @@ public class ProcessExportFileActivity extends AppCompatActivity {
 
                 //exclude header and FP
                 if (!bHeader){
+                    Log.d("texto=", "buffRead before=" + buffRead);
+
                     buffRead = getProperString(buffRead);
+
+                    Log.d("texto=", "buffRead after=" + buffRead);
+
 
                     //fields
                     variant = getSubstring(buffRead, sLoySeparator, int_variant_occurrence);
@@ -145,13 +150,19 @@ public class ProcessExportFileActivity extends AppCompatActivity {
                             listVariantsModifiers = getModifiers(modifiers);
                             listVariantsModifiers.add(variant);
                             qty = getSubstring(getSubstring(buffRead, sLoySeparator, int_qty_occurrence), ".", 0);
+                            Log.d("texto=", "item_name=" + item_name + " variant=" + variant + " modifiers=" + modifiers + " qty=" + qty);
 
                             for (int i=0; i < Integer.parseInt(qty); i++){
                                 //insert item_id
                                 List<String> list_item_id = helperDatabase.listLinkTypeValues("item_id", item_name);
-                                Log.d("texto=", "list_item_id size=" + list_item_id.size() + " i=" + i);
+                                if (list_item_id.size()>0){
+                                    Log.d("texto=", "list_item_id         size=" + list_item_id.size() + " i=" + i + " item_name=" + item_name);
+                                }
                                 for (int j=0; j < list_item_id.size(); j++){
+                                    //Log.d("texto=", " j=" + j);
                                     insertItemSale(list_item_id.get(j), date);
+
+                                    /*
                                     //insert var_dtls
                                     for (int k=0; k < listVariantsModifiers.size(); k++){
                                         List<String> list_var_dtls_id = helperDatabase.listLinkTypeValues("var_dtls_id", listVariantsModifiers.get(j));
@@ -159,9 +170,9 @@ public class ProcessExportFileActivity extends AppCompatActivity {
                                             insertVariantsSale(list_item_id.get(j), date, list_var_dtls_id.get(k));
                                         }
                                     }
+                                    */
                                 }
                             }
-                            Log.d("texto=", "item_name=" + item_name + " variant=" + variant + " modifiers=" + modifiers + " qty=" + qty);
                         }
 
                     }
@@ -409,11 +420,12 @@ public class ProcessExportFileActivity extends AppCompatActivity {
         helperSale.setSelling_price(helperDatabase.getItemSellingPrice(item_id));
         helperSale.setDate(date);
         helperSale.setCreated_by("admin");
-        helperSale.setCompleted("W");
+        helperSale.setCompleted("N");
         helperSale.setTransaction_counter(helperDatabase.nextTransactionCounter());
         helperSale.setTransaction_per_entry(helperDatabase.nextTransactionPerEntry());
         helperSale.setSort_order_id(helperDatabase.getSortOrderIdItem(helperSale));
         helperDatabase.insertSaleNew(helperSale);
+        helperDatabase.updateDuplicateVariants(helperSale);
     }
 
     private void insertVariantsSale(String item_id, String date, String var_dtls_id){
