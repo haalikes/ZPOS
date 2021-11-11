@@ -10,7 +10,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.watata.zpos.ddlclass.HelperSales;
 
 public class PaidActivity extends AppCompatActivity {
 

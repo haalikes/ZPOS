@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
-import android.os.Bundle;
-import android.text.Layout;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.GridLayout;
@@ -23,8 +20,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+
+import com.watata.zpos.ddlclass.HelperItem;
+import com.watata.zpos.ddlclass.HelperSales;
+import com.watata.zpos.ddlclass.HelperVariantsLinks;
 
 public class LayoutCardViewsItems {
 

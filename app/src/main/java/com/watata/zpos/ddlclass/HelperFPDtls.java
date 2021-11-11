@@ -1,4 +1,4 @@
-package com.watata.zpos;
+package com.watata.zpos.ddlclass;
 
 public class HelperFPDtls {
     private int fp_id;
@@ -45,4 +45,6 @@ public class HelperFPDtls {
     public void setFp_payment_advice(String fp_payment_advice) {
         this.fp_payment_advice = fp_payment_advice;
     }
+
+
 }

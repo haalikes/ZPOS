@@ -18,6 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.watata.zpos.ddlclass.HelperStockHistory;
+import com.watata.zpos.ddlclass.HelperStockNames;
 
 import java.text.DateFormat;
 import java.util.ArrayList;

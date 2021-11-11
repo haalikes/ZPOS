@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +19,8 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.watata.zpos.ddlclass.HelperSales;
+import com.watata.zpos.ddlclass.HelperStockHistory;
 
 import java.text.DecimalFormat;
 import java.util.LinkedList;

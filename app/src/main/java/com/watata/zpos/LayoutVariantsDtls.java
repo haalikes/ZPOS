@@ -1,6 +1,5 @@
 package com.watata.zpos;
 
-import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
@@ -9,7 +8,6 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -19,8 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,8 +25,13 @@ import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.solver.widgets.Helper;
 import androidx.core.content.res.ResourcesCompat;
+
+import com.watata.zpos.ddlclass.HelperItem;
+import com.watata.zpos.ddlclass.HelperSales;
+import com.watata.zpos.ddlclass.HelperVariantsDtls;
+import com.watata.zpos.ddlclass.HelperVariantsHdr;
+import com.watata.zpos.ddlclass.HelperVariantsLinks;
 
 public class LayoutVariantsDtls {
 

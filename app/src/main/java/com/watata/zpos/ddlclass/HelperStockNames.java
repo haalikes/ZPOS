@@ -1,4 +1,4 @@
-package com.watata.zpos;
+package com.watata.zpos.ddlclass;
 
 public class HelperStockNames {
 

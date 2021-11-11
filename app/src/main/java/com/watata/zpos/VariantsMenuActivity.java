@@ -1,20 +1,20 @@
 package com.watata.zpos;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.watata.zpos.ddlclass.HelperItem;
+import com.watata.zpos.ddlclass.HelperSales;
+import com.watata.zpos.ddlclass.HelperVariantsLinks;
 
 public class VariantsMenuActivity extends AppCompatActivity {
 

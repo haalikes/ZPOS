@@ -2,7 +2,6 @@ package com.watata.zpos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -12,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.watata.zpos.ddlclass.HelperSales;
 
 import java.util.LinkedList;
 import java.util.List;

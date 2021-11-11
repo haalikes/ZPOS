@@ -1,4 +1,4 @@
-package com.watata.zpos;
+package com.watata.zpos.ddlclass;
 
 public class HelperVariantsLinks {
     private int link_id, item_id, var_hdr_id;

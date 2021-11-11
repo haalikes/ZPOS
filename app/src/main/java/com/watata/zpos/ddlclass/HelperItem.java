@@ -1,4 +1,4 @@
-package com.watata.zpos;
+package com.watata.zpos.ddlclass;
 
 import android.os.Parcel;
 import android.os.Parcelable;

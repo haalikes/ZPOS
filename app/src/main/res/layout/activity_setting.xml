@@ -170,8 +170,8 @@
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:src="@drawable/zczach"
-                        android:id="@+id/aditcsvlinks"/>
+                        android:src="@drawable/file"
+                        android:id="@+id/editcsvlinks"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -179,7 +179,7 @@
                         android:layout_marginTop="12dp"
                         android:textColor="@color/colorPrimary"
                         android:textSize="12sp"
-                        android:text="Not available"/>
+                        android:text="Edit CSV Link"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

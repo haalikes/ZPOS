@@ -26,7 +26,7 @@ public class SettingActivity extends AppCompatActivity {
         iEditStockName = findViewById(R.id.itemnamesetting);
         iCategoryEdit = findViewById(R.id.editcategory);
         iEditVariants = findViewById(R.id.editvariants);
-        iEditCsvLinks = findViewById(R.id.aditcsvlinks);
+        iEditCsvLinks = findViewById(R.id.editcsvlinks);
     }
 
     public void setupBtnListneres(){

@@ -1,12 +1,12 @@
 package com.watata.zpos;
 
 public class HelperChanges {
-    private String change_all, stock_names, category, items, variants_links, variants_hdr, variants_dtls, composite_links, stock_histories, sales, fp_dtls ;
+    private String change_all, stock_names, category, items, variants_links, variants_hdr, variants_dtls, composite_links, stock_histories, sales, fp_dtls, csv_links ;
 
     public HelperChanges() {
     }
 
-    public HelperChanges(String change_all, String stock_names, String category, String items, String variants_links, String variants_hdr, String variants_dtls, String composite_links, String stock_histories, String sales, String fp_dtls) {
+    public HelperChanges(String change_all, String stock_names, String category, String items, String variants_links, String variants_hdr, String variants_dtls, String composite_links, String stock_histories, String sales, String fp_dtls, String csv_links) {
         this.change_all = change_all;
         this.stock_names = stock_names;
         this.category = category;
@@ -18,6 +18,7 @@ public class HelperChanges {
         this.stock_histories = stock_histories;
         this.sales = sales;
         this.fp_dtls = fp_dtls;
+        this.csv_links = csv_links;
     }
 
     public String getChange_all() {
@@ -108,5 +109,13 @@ public class HelperChanges {
 
     public void setFp_dtls(String fp_dtls) {
         this.fp_dtls = fp_dtls;
+    }
+
+    public String getCsv_links() {
+        return csv_links;
+    }
+
+    public void setCsv_links(String csv_links) {
+        this.csv_links = csv_links;
     }
 }

@@ -3,7 +3,6 @@ package com.watata.zpos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -26,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.watata.zpos.ddlclass.HelperStockNames;
+import com.watata.zpos.ddlclass.HelperStockNamesSorter;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -108,6 +109,8 @@ public class StockNamesEditActivity extends AppCompatActivity {
                 for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
                     appleSnapshot.getRef().removeValue();
                 }
+                ChangesFB changesFB = new ChangesFB();
+                changesFB.ChangesInStockNames();
             }
 
             @Override
@@ -127,6 +130,8 @@ public class StockNamesEditActivity extends AppCompatActivity {
                 for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
                     appleSnapshot.getRef().removeValue();
                 }
+                ChangesFB changesFB = new ChangesFB();
+                changesFB.ChangesInStockNames();
             }
 
             @Override
@@ -331,11 +336,7 @@ public class StockNamesEditActivity extends AppCompatActivity {
         textView.setText(sText);
         textView.setPadding(30, 10, 30, 10);
         textView.setBackgroundResource(R.drawable.custom_text_in);
-
-
-
-            textView.setTextSize(18);
-
+        textView.setTextSize(18);
         return(textView);
     }
 

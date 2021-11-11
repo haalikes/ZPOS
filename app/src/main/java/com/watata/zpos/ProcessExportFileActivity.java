@@ -5,22 +5,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.opencsv.CSVReader;
-
-import org.w3c.dom.Text;
+import com.watata.zpos.ddlclass.HelperCsvLinks;
+import com.watata.zpos.ddlclass.HelperSales;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -29,11 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -42,6 +33,10 @@ public class ProcessExportFileActivity extends AppCompatActivity {
     private EditText etFile;
     private int rCode = 1;
     private String pathFile;
+    final private String link_fp = "FP";
+    final private String link_lv = "LV";
+    final private String modifier_fp = ",";
+    final private String modifier_lv = ";";
     Button btnLoyverse;
     final String sLoySeparatorDtls = "\"";
     HelperDatabase helperDatabase = new HelperDatabase(this);
@@ -78,7 +73,6 @@ public class ProcessExportFileActivity extends AppCompatActivity {
                 if(resultCode == RESULT_OK){
                     Uri uri = data.getData();
                     pathFile = uri.getPath();
-                    openLoyverseFile();
                 }
         }
     }
@@ -92,6 +86,7 @@ public class ProcessExportFileActivity extends AppCompatActivity {
     }
 
     public void openLoyverseFile(){
+
         //location
         final int int_date_occurrece = 0
                 , int_receipt_type_occurrence = 2
@@ -105,6 +100,13 @@ public class ProcessExportFileActivity extends AppCompatActivity {
         //fields
         String date, receipt_type, item_name, variant, modifiers, qty;
         List<String> listVariantsModifiers = new LinkedList<>();
+        List<HelperCsvLinks> listHelperCsvLinksItemId = new LinkedList<>();
+        List<HelperCsvLinks> listHelperCsvLinksVardtls = new LinkedList<>();
+        HelperCsvLinks helperCsvLinkItemId = new HelperCsvLinks();
+        HelperCsvLinks helperCsvLinksVarDtls = new HelperCsvLinks();
+
+        List<String> list_item_id = new LinkedList<>();
+
 
         final String sLoySeparator = ",";
         boolean bHeader = true;
@@ -126,12 +128,8 @@ public class ProcessExportFileActivity extends AppCompatActivity {
 
                 //exclude header and FP
                 if (!bHeader){
-                    Log.d("texto=", "buffRead before=" + buffRead);
-
                     buffRead = getProperString(buffRead);
-
-                    Log.d("texto=", "buffRead after=" + buffRead);
-
+                    Log.d("texto=", "bufffffffffffffffffRead after=" + buffRead);
 
                     //fields
                     variant = getSubstring(buffRead, sLoySeparator, int_variant_occurrence);
@@ -147,31 +145,28 @@ public class ProcessExportFileActivity extends AppCompatActivity {
                             date = getConvertDate(date.substring(0,2), date.substring(3,5), date.substring(6,10));
                             item_name = getSubstring(buffRead, sLoySeparator, int_item_name_occurrence);
                             modifiers = getSubstring(buffRead, sLoySeparator, int_modifiers_occurrence);
-                            listVariantsModifiers = getModifiers(modifiers);
+                            listVariantsModifiers = getModifiers(modifiers,modifier_lv);
                             listVariantsModifiers.add(variant);
                             qty = getSubstring(getSubstring(buffRead, sLoySeparator, int_qty_occurrence), ".", 0);
-                            Log.d("texto=", "item_name=" + item_name + " variant=" + variant + " modifiers=" + modifiers + " qty=" + qty);
 
-                            for (int i=0; i < Integer.parseInt(qty); i++){
-                                //insert item_id
-                                List<String> list_item_id = helperDatabase.listLinkTypeValues("item_id", item_name);
-                                if (list_item_id.size()>0){
-                                    Log.d("texto=", "list_item_id         size=" + list_item_id.size() + " i=" + i + " item_name=" + item_name);
-                                }
-                                for (int j=0; j < list_item_id.size(); j++){
-                                    //Log.d("texto=", " j=" + j);
-                                    insertItemSale(list_item_id.get(j), date);
 
-                                    /*
+                            helperCsvLinkItemId = helperDatabase.helperCsvLinksItemId(item_name, link_lv);
+                            if (helperCsvLinkItemId.getZ_link_item_id()!=null){
+                                listVariantsModifiers = helperDatabase.removeIfSameVarHdr(helperCsvLinkItemId, listVariantsModifiers, link_lv);
+                                listHelperCsvLinksVardtls.clear();
+                                listHelperCsvLinksVardtls = helperDatabase.listHelperCsvLinksConvertStringToCsvLinks(helperCsvLinkItemId.getZ_link_item_id(), listVariantsModifiers, link_lv);
+
+                                for (int i=0; i < Integer.parseInt(qty); i++){
+                                    Log.d("texto=", " INSERT SALESSSSSSSSSSSSSSSSSS");
+                                    HelperSales helperSalesItem = insertItemSale(helperCsvLinkItemId.getZ_link_item_id(), date);
+
                                     //insert var_dtls
-                                    for (int k=0; k < listVariantsModifiers.size(); k++){
-                                        List<String> list_var_dtls_id = helperDatabase.listLinkTypeValues("var_dtls_id", listVariantsModifiers.get(j));
-                                        for (int l=0; l < list_var_dtls_id.size(); l++){
-                                            insertVariantsSale(list_item_id.get(j), date, list_var_dtls_id.get(k));
-                                        }
+                                    for (int k=0;k<listHelperCsvLinksVardtls.size();k++){
+                                        insertVariantsSale(helperCsvLinkItemId.getZ_link_item_id(), date, listHelperCsvLinksVardtls.get(k).getZ_link_var_dtls_id(), helperSalesItem);
                                     }
-                                    */
                                 }
+                            } else {
+                                Log.d("texto=", "No setup in CSV link for item_name=" + item_name);
                             }
                         }
 
@@ -190,6 +185,207 @@ public class ProcessExportFileActivity extends AppCompatActivity {
         }
     }
 
+    public void openFoodPandaFile(View view){
+        //location
+        final int int_order_id = 1
+                , int_order_status = 4
+                , int_date_occurrece = 5
+                , int_qty_item_variant_modifiers = 24
+                ;
+        final String accepted_order = "Delivered";
+
+        //fields
+        String order_id, order_status, date, qty_item_variant_modifiers;
+        List<String> listVariantsModifiers = new LinkedList<>();
+        List<HelperCsvLinks> listHelperCsvLinksVardtls = new LinkedList<>();
+        HelperCsvLinks helperCsvLinkItemId = new HelperCsvLinks();
+
+        List<String> list_item_id = new LinkedList<>();
+
+
+        final String sLoySeparator = ",";
+        boolean bHeader = true;
+
+        pathFile = pathFile.substring(pathFile.lastIndexOf(":") + 1);
+        etFile.setText(pathFile);
+        File file = new File(pathFile);
+
+        String buffRead = "";
+        int intCount = 0;
+
+
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            while((buffRead  = reader.readLine()) != null){
+                listVariantsModifiers.clear();
+                buffGlobal = buffRead;
+
+
+                //exclude header and FP
+                if (!bHeader){
+                    buffRead = getProperString(buffRead);
+                    Log.d("texto=", "bufffffffffffffffffRead after=" + buffRead);
+
+                    //fields
+                    order_status = getSubstring(buffRead, sLoySeparator, int_order_status);
+
+                    if (order_status.equals(accepted_order)){
+                        //fields
+                        order_id = getSubstring(buffRead, sLoySeparator, int_order_id);
+                        date = getSubstring(buffRead, sLoySeparator, int_date_occurrece);
+                        date = getConvertDate(date.substring(9,10), date.substring(6,7), date.substring(0,4));
+                        qty_item_variant_modifiers = getSubstring(buffRead, sLoySeparator, int_qty_item_variant_modifiers);
+
+                        //3 Fried Noodles With Siomai (Siomai) [1 Sweet Chili Sauce; 1 Beef Teriyaki Sauce; 1 Pork Siomai]; 4 Pork Siomai 4pcs
+                        String s_qty, s_item_name, s_variant, s_modifiers;
+
+                        qty_item_variant_modifiers = commaVariantsModifiers(qty_item_variant_modifiers);
+                        List<String> lOneItemOrder = new LinkedList<>();
+                        lOneItemOrder = listOneItemOrder(qty_item_variant_modifiers);
+
+                        String tempS = "";
+                        String tempQty, tempItemName = null, tempVariant = null, tempModifiers = null;
+                        tempS = qty_item_variant_modifiers;
+                        //1 Z6. Fries & Drinks + Fried Noodles With Toppings [1 Sour Cream, 1 Chicken Balls, 1 Beef Teriyaki Sauce, 1 Barbeque Sauce];
+
+                        for (int i=0;i<lOneItemOrder.size();i++){
+                            tempQty = lOneItemOrder.get(i).substring(0,lOneItemOrder.get(i).indexOf(" ")).trim();
+                            tempS = lOneItemOrder.get(i).substring(lOneItemOrder.get(i).indexOf(" ")).trim();
+
+                            tempVariant = null;
+                            tempModifiers = null;
+                            listVariantsModifiers.clear();
+
+                            if (tempS.indexOf("(")>0 && tempS.indexOf("[")>0){
+                                if (tempS.indexOf("(")<tempS.indexOf("[")){
+                                    tempItemName = tempS.substring(0,tempS.indexOf("(")).trim();
+                                    tempVariant = tempS.substring(tempS.indexOf("(")+1,tempS.indexOf(")")).trim();
+                                    tempModifiers = tempS.substring(tempS.indexOf("[")+1,tempS.indexOf("]")).trim();
+                                } else {
+                                    tempItemName = tempS.substring(0,tempS.indexOf("[")).trim();
+                                    tempVariant = tempS.substring(tempS.indexOf("(")+1,tempS.indexOf(")")).trim();
+                                    tempModifiers = tempS.substring(tempS.indexOf("[")+1,tempS.indexOf("]")).trim();
+                                }
+                            } else if (tempS.indexOf("(")>0){
+                                tempItemName = tempS.substring(0,tempS.indexOf("(")).trim();
+                                tempVariant = tempS.substring(tempS.indexOf("(")+1,tempS.indexOf(")")).trim();
+                            } else if (tempS.indexOf("[")>0){
+                                tempItemName = tempS.substring(0,tempS.indexOf("[")).trim();
+                                tempModifiers = tempS.substring(tempS.indexOf("[")+1,tempS.indexOf("]")).trim();
+                            } else {
+                                tempItemName = tempS.trim();
+                            }
+
+                            if (tempModifiers!=null){
+                                listVariantsModifiers = getModifiers(tempModifiers,modifier_fp);
+                            } else if (tempVariant!=null){
+                                listVariantsModifiers.add(tempVariant);
+                            } else if (tempModifiers==null && tempVariant==null){
+                                listVariantsModifiers.add(tempItemName);
+                            }
+
+                            helperCsvLinkItemId = helperDatabase.helperCsvLinksItemId(tempItemName, link_fp);
+
+                            if (helperCsvLinkItemId!=null){
+                                listVariantsModifiers = helperDatabase.removeIfSameVarHdr(helperCsvLinkItemId, listVariantsModifiers, link_fp);
+                                listHelperCsvLinksVardtls.clear();
+                                listHelperCsvLinksVardtls = helperDatabase.listHelperCsvLinksConvertStringToCsvLinks(helperCsvLinkItemId.getZ_link_item_id(), listVariantsModifiers, link_fp);
+
+
+                                for (int j=0;j<Integer.parseInt(tempQty);j++){
+                                    Log.d("texto=", " INSERT SALESSSSSSSSSSSSSSSSSS");
+                                    HelperSales helperSalesItem = insertItemSale(helperCsvLinkItemId.getZ_link_item_id(), date);
+
+                                    //insert var_dtls
+                                    for (int k=0;k<listHelperCsvLinksVardtls.size();k++){
+                                        insertVariantsSale(helperCsvLinkItemId.getZ_link_item_id(), date, listHelperCsvLinksVardtls.get(i).getZ_link_var_dtls_id(), helperSalesItem);
+                                    }
+
+                                }
+                                Log.d("lOneItemOrder=", "lOneItemOrder=" + lOneItemOrder.get(i));
+                                Log.d("lOneItemOrder=", "tempQty=" + tempQty);
+                                Log.d("lOneItemOrder=", "tempItemName=" + tempItemName);
+                                Log.d("lOneItemOrder=", "tempVariant=" + tempVariant);
+                                Log.d("lOneItemOrder=", "tempModifiers=" + tempModifiers);
+                            } else {
+                                Log.d("texto=", "No setup in CSV link for item_name=" + tempItemName);
+                            }
+
+                        }
+                    }
+                }
+                bHeader = false;
+            }
+
+            Log.d("texto=", "success");
+
+        } catch(Exception e){
+            Log.d("texto=", "error buffGlobal=" + buffGlobal + e.getMessage());
+            System.out.println( e.getMessage());
+        }
+    }
+
+    public List<String> listOneItemOrder(String s){
+        List<String> lOneItemOrder = new LinkedList<>();
+        String newS = s;
+        if (newS.indexOf(";")>0){
+            while(newS.indexOf(";")>0){
+                lOneItemOrder.add(newS.substring(0,newS.indexOf(";")).trim());
+                newS = newS.substring(newS.indexOf(";")+1).trim();
+            }
+        } else {
+            lOneItemOrder.add(newS);
+        }
+        return lOneItemOrder;
+    }
+
+    public String commaVariantsModifiers(String s){
+        Log.d("texto=", "commaVariantsModifiers start");
+        String newS = s + ";";
+        String outS = null;
+        Boolean variant = false, modifier = false;
+
+        //3 Fried Noodles With Siomai (Siomai) [1 Sweet Chili Sauce; 1 Beef Teriyaki Sauce; 1 Pork Siomai]; 4 Pork Siomai 4pcs
+        //comma the variants first
+        for (int i=0;i<s.length();i++){
+            if(newS.substring(i,i+1).equals("(") && !variant){
+                variant = true;
+            }
+            if(newS.substring(i,i+1).equals(")") && variant){
+                variant = false;
+            }
+
+            if(variant){
+                if(newS.substring(i,i+1).equals(";")){
+                    newS = newS.substring(0,i) + "," + newS.substring(i+1);
+                }
+            }
+
+        }
+
+        for (int i=0;i<s.length();i++){
+            if(newS.substring(i,i+1).equals("[") && !variant){
+                variant = true;
+            }
+            if(newS.substring(i,i+1).equals("]") && variant){
+                variant = false;
+            }
+
+            if(variant){
+                if(newS.substring(i,i+1).equals(";")){
+                    newS = newS.substring(0,i) + "," + newS.substring(i+1);
+                }
+            }
+
+        }
+
+        outS = newS;
+        Log.d("texto=", "commaVariantsModifiers end");
+        return outS;
+    }
+
+    /*
     public void openFoodPandaFile(View view){
 
         String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE};
@@ -212,6 +408,7 @@ public class ProcessExportFileActivity extends AppCompatActivity {
             System.out.println( e.getMessage());
         }
     }
+    */
 
     public void writeFile(View view){
         try {
@@ -277,7 +474,7 @@ public class ProcessExportFileActivity extends AppCompatActivity {
 
             }
 
-            Log.d("texto=", "returnS=" + returnS);
+            //Log.d("texto=", "returnS=" + returnS);
 
             return returnS;
         } else {
@@ -290,13 +487,15 @@ public class ProcessExportFileActivity extends AppCompatActivity {
     public String getSubstring(String s, String separator, int occurance){
         String newS = s;
 
-        if (occurance!=0){
-            for (int i = 0; i < occurance; i++) {
+        if (newS.indexOf(separator)>0){
+            if (occurance!=0){
+                for (int i = 0; i < occurance; i++) {
                     newS = newS.substring(newS.indexOf(separator)+1);
+                }
             }
-        }
 
-        newS = newS.substring(0, newS.indexOf(separator));
+            newS = newS.substring(0, newS.indexOf(separator));
+        }
 
         return newS;
     }
@@ -393,6 +592,7 @@ public class ProcessExportFileActivity extends AppCompatActivity {
 
     }
 
+    /*
     private List<String> getModifiers(String s){
         String newS = s;
         List<String> listMod = new LinkedList<>();
@@ -407,9 +607,29 @@ public class ProcessExportFileActivity extends AppCompatActivity {
 
         return listMod;
     }
+    */
 
-    private void insertItemSale(String item_id, String date){
-        Log.d("texto=", "insertItemSale item_id=" + item_id + " date=" + date );
+    private List<String> getModifiers(String s, String s_sep){
+        String newS = s;
+        List<String> listMod = new LinkedList<>();
+
+        ///if (s.indexOf(";") > 0){
+        if (s.length()>0) {
+            newS = newS + s_sep;
+            for (int i = 0; i < countChar(s, s_sep) + 1; i++) {
+                listMod.add(newS.substring(0, newS.indexOf(s_sep)));
+                newS = newS.substring(newS.indexOf(s_sep) + 1);
+                newS = newS.trim();
+            }
+        }
+        ///}
+
+        return listMod;
+    }
+
+    private HelperSales insertItemSale(String item_id, String date){
+
+
 
         //insert item
         HelperSales helperSale = new HelperSales();
@@ -420,35 +640,45 @@ public class ProcessExportFileActivity extends AppCompatActivity {
         helperSale.setSelling_price(helperDatabase.getItemSellingPrice(item_id));
         helperSale.setDate(date);
         helperSale.setCreated_by("admin");
-        helperSale.setCompleted("N");
+        helperSale.setCompleted("N"); //to detect variant exists
         helperSale.setTransaction_counter(helperDatabase.nextTransactionCounter());
         helperSale.setTransaction_per_entry(helperDatabase.nextTransactionPerEntry());
         helperSale.setSort_order_id(helperDatabase.getSortOrderIdItem(helperSale));
         helperDatabase.insertSaleNew(helperSale);
-        helperDatabase.updateDuplicateVariants(helperSale);
+        //helperDatabase.updateDuplicateVariants(helperSale);
+        helperDatabase.addToCart(helperSale);
+
+        return helperSale;
+
     }
 
-    private void insertVariantsSale(String item_id, String date, String var_dtls_id){
-
-        Log.d("texto=", "insertVariantsSale item_id=" + item_id + " date=" + date + " var_dtls_id=" + var_dtls_id);
+    private void insertVariantsSale(String item_id, String date, String var_dtls_id, HelperSales helperSalesItem){
 
         HelperSales helperSaleVar = new HelperSales();
         helperSaleVar.setItem_id(Integer.parseInt(item_id));
-        helperSaleVar.setItem_name(helperDatabase.getItemName(item_id));
-        helperSaleVar.setSelling_price(helperDatabase.getItemSellingPrice(item_id));
+        helperSaleVar.setItem_name(helperDatabase.getVarDtlsName(var_dtls_id));
+        helperSaleVar.setSelling_price(helperDatabase.getVarDtlsSellingPrice(var_dtls_id));
         helperSaleVar.setMachine_name("pos1");
+        helperSaleVar.setDate(date);
         helperSaleVar.setCreated_by("admin");
-        helperSaleVar.setCompleted("W");
+        helperSaleVar.setCompleted("N"); //to detect variant exists
         helperSaleVar.setQty("1");
         helperSaleVar.setVar_hdr_id(helperDatabase.getVarHdrId(var_dtls_id));
         helperSaleVar.setVar_dtls_id(var_dtls_id);
-        helperSaleVar.setTransaction_counter(helperDatabase.nextTransactionCounter());
-        helperSaleVar.setTransaction_per_entry(helperDatabase.nextTransactionPerEntry());
+        helperSaleVar.setTransaction_counter(helperSalesItem.getTransaction_counter());
+        helperSaleVar.setTransaction_per_entry(helperSalesItem.getTransaction_per_entry());
+        //helperSaleVar.setSort_order_id(helperSalesItem.getSort_order_id());
+
+        //helperSaleVar.setTransaction_counter(helperDatabase.nextTransactionCounter());
+        //helperSaleVar.setTransaction_per_entry(helperDatabase.nextTransactionPerEntry());
         if (helperDatabase.variantExists(helperSaleVar)) {
             helperSaleVar.setSort_order_id(helperDatabase.getSortOrderIdVariant(helperSaleVar));
         } else {
             helperSaleVar.setSort_order_id(helperDatabase.nextSortOrderIdVariant(helperSaleVar));
         }
+        helperDatabase.insertSaleNew(helperSaleVar);
+        //helperDatabase.updateDuplicateVariants(helperSale);
+        helperDatabase.addToCart(helperSaleVar);
     }
 
 }

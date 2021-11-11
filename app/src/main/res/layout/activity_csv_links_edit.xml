@@ -59,6 +59,8 @@
                 app:cardCornerRadius="12dp"
                 android:layout_margin="12dp">
 
+
+
                 <LinearLayout
                     android:orientation="vertical"
                     android:padding="16dp"
@@ -66,58 +68,88 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="10dp"
+                        android:gravity="left"
+                        android:background="#00BCD4"
+                        >
+
+                        <EditText
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Step 1 select your csv file type."
+                            android:id="@+id/etFile"
+                            />
+                        <Spinner
+                            android:id="@+id/spinner_link_source"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#FFFFFF"
+                            android:entries="@array/link_source"
+                            android:hint="item"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:text="Step 2) Press Select CSV File and select it"
+                            />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="right"
+                            >
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:onClick="openFileChooser"
+                                android:text="Select CSV File"/>
+
+                            <Button
+                                android:id="@+id/btn_back"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Back"/>
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Select Item from App"
                         android:paddingTop="10dp"/>
-
-                    <Spinner
-                        android:id="@+id/spinner_app_item_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:hint="app item name"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="#FF9800">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="Select Item from CSV"
+                            android:text="Select Item, Item-variant from CSV"
                             android:paddingTop="10dp"/>
                         <Spinner
-                            android:id="@+id/spinner_csv_item_name"
+                            android:id="@+id/spinner_csv"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:hint="item"/>
+                            android:background="#FFFFFF"
+                            android:hint="CSV"/>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:gravity="right">
-
-                            <Button
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Add Link for CSV Items"
-                                android:id="@+id/add_link_csv_item"/>
-                            <Button
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="List Variants"
-                                android:id="@+id/list_variant_btn"
-                                android:visibility="gone"
-                                />
                         </LinearLayout>
                     </LinearLayout>
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Select Variant from App"/>
+                        />
 
                     <Spinner
                         android:id="@+id/spinner_app_variant"
@@ -131,18 +163,46 @@
                         android:padding="10dp"
                         android:orientation="vertical"
                         android:id="@+id/llVariant"
+                        android:background="#CDDC39"
                         >
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:text="Select Variants from CSV"
+                            android:text="Press button to link data"
                             android:paddingTop="10dp"/>
 
                         <Spinner
-                            android:id="@+id/spinner_csv_variant"
+                            android:id="@+id/spinner_db"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:background="#FFFFFF"
                             android:hint="item"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right">
+                        </LinearLayout>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingTop="20dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:orientation="vertical"
+                        android:background="#00BCD4"
+                        >
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Select item, item-variant from db"
+                            android:paddingTop="10dp"/>
+
+
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -153,36 +213,11 @@
                             <Button
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Add Link for CSV Variant"
-                                android:id="@+id/add_link_csv_variant"/>
+                                android:text="Link data"
+                                android:id="@+id/btn_link_data"/>
                         </LinearLayout>
                     </LinearLayout>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:paddingTop="20dp"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:padding="10dp"
-                        android:gravity="right"
-                        >
-
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="openFileChooser"
-                            android:text="Select CSV File"/>
-
-                        <Button
-                            android:id="@+id/back"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Back"/>
-
-                    </LinearLayout>
 
                     <HorizontalScrollView
                         android:layout_width="match_parent"

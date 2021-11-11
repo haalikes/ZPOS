@@ -1,11 +1,8 @@
 package com.watata.zpos;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.widgets.Helper;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +14,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.watata.zpos.ddlclass.HelperCsvLinks;
+import com.watata.zpos.ddlclass.HelperFPDtls;
+import com.watata.zpos.ddlclass.HelperItem;
+import com.watata.zpos.ddlclass.HelperSales;
+import com.watata.zpos.ddlclass.HelperStockHistory;
+import com.watata.zpos.ddlclass.HelperStockNames;
+import com.watata.zpos.ddlclass.HelperVariantsDtls;
+import com.watata.zpos.ddlclass.HelperVariantsHdr;
+import com.watata.zpos.ddlclass.HelperVariantsLinks;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,16 +107,50 @@ public class PostLoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
 
         generateRequiredData();
+        //testing(); firebase not working, need to restart router
         //openMainMenuActivity();
     }
 
     public void generateRequiredData() {
         progressBar.setVisibility(View.VISIBLE);
+        Log.d("refreshChanges", "start");
         changes();
+        Log.d("refreshChanges", "end");
         ///downloadStockNames();
     }
 
+    public void testing(){
+        Log.d("refreshChanges", "changes start");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("changes");
+        Log.d("refreshChanges", "changes start1");
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    List<HelperChanges> changes = new ArrayList<HelperChanges>();
+                    changes.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        changes.add(snapshot.getValue(HelperChanges.class));
+                    }
+                    Log.d("refreshChanges", "dataSnapshot.exists");
+                    openMainMenuActivity();
+                } else {
+                    Log.d("refreshChanges", "dataSnapshot.not.exists");
+                    openMainMenuActivity();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d("refreshChanges", "changes failed");
+                openMainMenuActivity();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
     public void changes(){
+        Log.d("refreshChanges", "changes start");
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("changes");
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -123,10 +163,8 @@ public class PostLoginActivity extends AppCompatActivity {
                     }
                     helperDatabase.refreshChanges(changes);
                     if (helperDatabase.dbChanged()){
-                        Log.d("refreshChanges", "refresh yes");
                         downloadStockNames();
                     } else {
-                        Log.d("refreshChanges", "refresh no");
                         openMainMenuActivity();
                     }
 
@@ -461,10 +499,8 @@ public class PostLoginActivity extends AppCompatActivity {
     }
 
     public void downloadCSVLinks(){
-        /*
-        if(helperDatabase.dbChangedFPDtls()){
-            */
-        Log.d("refreshCSVLinks", "start");
+
+        if(helperDatabase.dbChangedCsvLinks()){
             DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("csv_links");
             reference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -489,13 +525,9 @@ public class PostLoginActivity extends AppCompatActivity {
                     openMainMenuActivity();
                 }
             });
-        Log.d("refreshCSVLinks", "end");
-          /*
         } else {
             openMainMenuActivity();
         }
-        */
-
     }
 
     public void openMainMenuActivity() {

@@ -3,10 +3,8 @@ package com.watata.zpos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.widgets.Helper;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,10 +30,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.watata.zpos.ddlclass.HelperStockNames;
+import com.watata.zpos.ddlclass.HelperVariantsDtls;
+import com.watata.zpos.ddlclass.HelperVariantsHdr;
+import com.watata.zpos.ddlclass.HelperVariantsLinks;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 

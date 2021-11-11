@@ -29,12 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import org.w3c.dom.Text;
+import com.watata.zpos.ddlclass.HelperFPDtls;
 
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -278,7 +275,7 @@ public class FPDtlsActivity extends AppCompatActivity {
                 builder.setMessage("Delete " + helperFPDtl.getFp_id() + "?");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        deleteStockName(helperFPDtl);
+                        deleteFB(helperFPDtl);
                         dialog.dismiss();
                     }
                 });
@@ -332,7 +329,7 @@ public class FPDtlsActivity extends AppCompatActivity {
         return(textView);
     }
 
-    public void deleteStockName(HelperFPDtls helperFPDtl){
+    public void deleteFB(HelperFPDtls helperFPDtl){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         Query applesQuery = ref.child("fp_dtls").orderByChild("fp_id").equalTo(helperFPDtl.getFp_id());
 
@@ -342,6 +339,8 @@ public class FPDtlsActivity extends AppCompatActivity {
                 for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
                     appleSnapshot.getRef().removeValue();
                 }
+                ChangesFB changesFB = new ChangesFB();
+                changesFB.ChangesFPDtls();
             }
 
             @Override

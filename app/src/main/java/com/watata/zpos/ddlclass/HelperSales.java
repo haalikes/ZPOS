@@ -1,4 +1,4 @@
-package com.watata.zpos;
+package com.watata.zpos.ddlclass;
 
 public class HelperSales {
     //transaction_id is unique per machine, auto increment
